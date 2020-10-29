@@ -1,4 +1,4 @@
-package zErr.algorithm;
+package zerr.simulator;
 
 public final class Hamming {
 	private static final int VAR_2 = 2;
