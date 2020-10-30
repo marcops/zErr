@@ -33,7 +33,7 @@ public final class Hamming {
 		// locations:
 
 		for (i = 1; i <= b.length; i++) {
-			if (Math.pow(2, j) == i) {
+			if ((int)Math.pow(VAR_2, j) == i) {
 				// Found a parity bit location.
 				// Adjusting with (-1) to account for array indices starting from 0 instead of
 				// 1.
@@ -47,7 +47,7 @@ public final class Hamming {
 		for (i = 0; i < parityCount; i++) {
 			// Setting even parity bits at parity bit locations:
 
-			b[((int) Math.pow(2, i)) - 1] = getParity(b, i);
+			b[((int) Math.pow(VAR_2, i)) - 1] = getParity(b, i);
 		}
 		return b;
 	}
@@ -61,7 +61,7 @@ public final class Hamming {
 			// +1 is needed since array indices start from 0 whereas we need to start from
 			// 1.
 
-			if (Math.pow(2, parityCount) == i + parityCount + 1) {
+			if ((int)Math.pow(VAR_2, parityCount) == i + parityCount + 1) {
 				parityCount++;
 			} else {
 				i++;
@@ -73,7 +73,7 @@ public final class Hamming {
 	static int getParity(int[] b, int power) {
 		int parity = 0;
 		for (int i = 0; i < b.length; i++) {
-			if (b[i] != 2) {
+			if (b[i] != VAR_2) {
 				// If 'i' doesn't contain an unset value,
 				// We will save that index value in k, increase it by 1,
 				// Then we convert it into binary:
@@ -85,9 +85,9 @@ public final class Hamming {
 				// Then we need to check the value stored at that location.
 				// Checking if that value is 1 or 0, we will calculate the parity value.
 
-				int x = ((Integer.parseInt(s)) / ((int) Math.pow(10, power))) % 10;
+				int x = ((Integer.parseInt(s)) / ((int) Math.pow(VAR_10, power))) % VAR_10;
 				if (x == 1 && b[i] == 1)
-					parity = (parity + 1) % 2;
+					parity = (parity + 1) % VAR_2;
 			}
 		}
 		return parity;
@@ -100,7 +100,7 @@ public final class Hamming {
 			System.out.println("MULTIPLES ERRORS" + errorLocation);
 			errorLocation = 0;
 		}
-		int[] ham = a;
+		int[] ham = a.clone();
 		if (errorLocation != 0)
 			ham = fixError(a, errorLocation);
 		// else
@@ -109,7 +109,7 @@ public final class Hamming {
 		int power = parityCount - 1;
 		// System.out.println("Original data sent was:");
 		for (int i = ham.length; i > 0; i--) {
-			if (Math.pow(2, power) != i) {
+			if ((int)Math.pow(VAR_2, power) != i) {
 				// System.out.print(ham[i - 1]);
 			} else {
 				power--;
@@ -121,7 +121,7 @@ public final class Hamming {
 
 	private static int[] fixError(int[] a, int errorLocation) {
 		System.out.println("Error is at location " + errorLocation + ".");
-		a[errorLocation - 1] = (a[errorLocation - 1] + 1) % 2;
+		a[errorLocation - 1] = (a[errorLocation - 1] + 1) % VAR_2;
 //		System.out.println("Corrected code is:");
 //		debug(a);
 		return a;
@@ -142,9 +142,9 @@ public final class Hamming {
 
 				int k = i + 1;
 				String s = Integer.toBinaryString(k);
-				int bit = ((Integer.parseInt(s)) / ((int) Math.pow(VAR_10, power))) % 10;
+				int bit = ((Integer.parseInt(s)) / ((int) Math.pow(VAR_10, power))) % VAR_10;
 				if (bit == 1 && a[i] == 1)
-					parity[power] = (parity[power] + 1) % 2;
+					parity[power] = (parity[power] + 1) % VAR_2;
 			}
 			syndrome = parity[power] + syndrome;
 		}
@@ -152,7 +152,7 @@ public final class Hamming {
 		// Using these values, we will now check if there is a single bit error and then
 		// correct it.
 
-		return Integer.parseInt(syndrome, 2);
+		return Integer.parseInt(syndrome, VAR_2);
 
 	}
 

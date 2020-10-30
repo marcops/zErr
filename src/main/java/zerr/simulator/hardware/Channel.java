@@ -1,4 +1,4 @@
-package zerr.simulator;
+package zerr.simulator.hardware;
 
 import java.util.BitSet;
 

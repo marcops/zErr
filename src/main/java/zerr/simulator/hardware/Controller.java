@@ -1,4 +1,4 @@
-package zerr.simulator;
+package zerr.simulator.hardware;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -10,12 +10,21 @@ import zerr.configuration.model.ControllerConfModel;
 @Builder
 public final class Controller {
 	private Integer bufferRequestSize;
-	private ArrayBlockingQueue<Channel> queueRequest;
+	private ArrayBlockingQueue<ChannelRequest> queueRequest;
 	
 	public static Controller create(ControllerConfModel controller) {
 		return Controller.builder()
 				.bufferRequestSize(controller.getBufferRequestSize())
 				.queueRequest(new ArrayBlockingQueue<>(controller.getBufferRequestSize()))
 				.build();
+	}
+
+	public void request(ChannelRequest channelRequest) {
+		queueRequest.add(channelRequest);		
+	}
+	
+	public void print() {
+		queueRequest.forEach(x -> System.out.println(x));
+		
 	}
 }

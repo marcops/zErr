@@ -1,17 +1,17 @@
-package zerr.simulator;
+package zerr.simulator.hardware;
 
 import java.util.HashMap;
 
 import lombok.Builder;
-import lombok.Data;
 import zerr.configuration.model.ChipConfModel;
+import zerr.util.BitSetFunction;
 
-@Data
+//@Data
 @Builder
 public final class Chip {
 	private HashMap<Integer, Bank> hashBank;
-	private Integer amount;
-
+//	private Integer amount;
+	
 	public static Chip create(ChipConfModel chip) {
 		HashMap<Integer, Bank> hash = new HashMap<>();
 		for (int i = 0; i < chip.getBank().size(); i++)
@@ -20,7 +20,18 @@ public final class Chip {
 		
 		return Chip.builder()
 				.hashBank(hash)
-				.amount(chip.getAmount())
+//				.amount(chip.getAmount())
 				.build();
+	}
+
+	public void exec(ChannelRequest request) {
+		int bank = BitSetFunction.toInt(request.getBank());
+		if(bank < 0 || bank >= hashBank.size()) {
+			System.err.println("FATAL: Wrong bank");
+			System.exit(-1);
+		}
+		
+		hashBank.get(bank).exec(request);
+		
 	}
 }

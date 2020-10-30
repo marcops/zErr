@@ -1,6 +1,6 @@
 package zerr.test;
 
-import zerr.simulator.OperationalSystem;
+import zerr.simulator.os.OperationalSystem;
 
 public class HelloWordApp {
 	private OperationalSystem os;

@@ -2,6 +2,8 @@ package zerr.simulator;
 
 import zerr.configuration.ConfigurationService;
 import zerr.configuration.model.ZErrConfModel;
+import zerr.simulator.hardware.Hardware;
+import zerr.simulator.os.OperationalSystem;
 import zerr.test.HelloWordApp;
 
 public class Simulator {
