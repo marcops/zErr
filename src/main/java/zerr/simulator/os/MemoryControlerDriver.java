@@ -1,47 +1,37 @@
 package zerr.simulator.os;
 
-import java.util.BitSet;
-import java.util.Map;
-
 import lombok.Builder;
 import lombok.Data;
-import zerr.simulator.hardware.ChannelRequest;
+import zerr.simulator.hardware.ChannelEvent;
+import zerr.simulator.hardware.ControlSignal;
 import zerr.simulator.hardware.Controller;
+import zerr.util.Bits;
 
 @Builder
 @Data
 public final class MemoryControlerDriver {
-	private Map<Integer, Controller> hashController;
-	/*
-	 * !RAS, !CAS, !WE
-	 * 
-	 * 0 1 1 = send row
-	 * 0 0 1 = send col
-	 * 1 0 1 = data ok
-	 * */
-	private static final int RAS_POSITION = 0;
-	private static final int CAS_POSITION = 1;
-	private static final int WE_POSITION = 2;
-	private static final boolean[][] WRITE_EVENT = { { false, true, true }, { false, false, true }, { true, false, true } };
-	
-	public void writeEvent(int pos, BitSet address, BitSet bank, BitSet bankGroup, final BitSet data) {
+	private Controller controller;
+
+	private static final ControlSignal[] WRITE_EVENT = { ControlSignal.loadRow(), 
+			ControlSignal.setSenseAmpColumn(),
+			ControlSignal.writeCell() };
+
+	public void writeEvent(Bits address, Bits bank, Bits bankGroup, final Bits data) throws InterruptedException {
 		for (int i = 0; i < WRITE_EVENT.length; i++) {
-			hashController.get(pos).request(ChannelRequest.builder()
+			controller.getHashModule().get(0).sendCommand(ChannelEvent.builder()
 					.address(address)
 					.bank(bank)
 					.bankGroup(bankGroup)
 					.data(data)
-					.ras(WRITE_EVENT[i][RAS_POSITION])
-					.cas(WRITE_EVENT[i][CAS_POSITION])
-					.we(WRITE_EVENT[i][WE_POSITION])
-					.build());
+					.controlSignal(WRITE_EVENT[i])
+					.build(), false);
 		}
 	}
 
-	public static MemoryControlerDriver create(Map<Integer, Controller> hashController) {
+	public static MemoryControlerDriver create(Controller controller) {
 		return MemoryControlerDriver
 				.builder()
-				.hashController(hashController)
+				.controller(controller)
 				.build();
 	}
 

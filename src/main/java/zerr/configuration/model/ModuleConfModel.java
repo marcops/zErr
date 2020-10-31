@@ -19,4 +19,5 @@ public class ModuleConfModel {
 	private Integer amount;
 	private List<RankConfModel> rank;
 	private ChannelConfModel channel;
+	private Integer bufferSize;
 }

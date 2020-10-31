@@ -1,34 +1,34 @@
 {
   "simulator" : { },
   "hardware" : {
-    "controller" : { 
-    	"bufferRequestSize": 64
-    },
-    "module" : [ {
-      "amount" : 1,
-      "name" : "oldestDDR",
-      "channel" : {
-        "dataSize" : 72,
-        "adressSize" : 17,
-        "bankSize" : 2,
-        "bankGroupSize" : 2
-      },
-      "rank" : [ {
+    "controller" : {
+      "module" : [ {
         "amount" : 1,
-        "chip" : [ {
-          "amount" : 9,
-          "bank" : [ {
-            "amount" : 4,
-            "matrix" : {
-              "amount" : 8,
-              "cell" : {
-                "row" : 4000,
-                "columns" : 1000
+        "name" : "oldestDDR",
+        "bufferSize" : 64,
+        "channel" : {          
+          "dataSize" : 72,
+          "adressSize" : 17,
+          "bankSize" : 2,
+          "bankGroupSize" : 2
+        },
+        "rank" : [ {
+          "amount" : 1,
+          "chip" : [ {
+            "amount" : 9,
+            "bank" : [ {
+              "amount" : 4,
+              "matrix" : {
+                "amount" : 8,
+                "cell" : {
+                  "row" : 4000,
+                  "columns" : 1000
+                }
               }
-            }
+            } ]
           } ]
         } ]
       } ]
-    } ]
+    }
   }
 }

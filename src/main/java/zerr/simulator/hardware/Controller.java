@@ -1,6 +1,6 @@
 package zerr.simulator.hardware;
 
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.HashMap;
 
 import lombok.Builder;
 import lombok.Data;
@@ -9,22 +9,16 @@ import zerr.configuration.model.ControllerConfModel;
 @Data
 @Builder
 public final class Controller {
-	private Integer bufferRequestSize;
-	private ArrayBlockingQueue<ChannelRequest> queueRequest;
-	
-	public static Controller create(ControllerConfModel controller) {
-		return Controller.builder()
-				.bufferRequestSize(controller.getBufferRequestSize())
-				.queueRequest(new ArrayBlockingQueue<>(controller.getBufferRequestSize()))
-				.build();
-	}
+	private HashMap<Integer, Module> hashModule;
 
-	public void request(ChannelRequest channelRequest) {
-		queueRequest.add(channelRequest);		
-	}
-	
-	public void print() {
-		queueRequest.forEach(x -> System.out.println(x));
+	public static Controller create(ControllerConfModel controller) {
+		HashMap<Integer, Module> hashModule = new HashMap<>();
+		for (int i = 0; i < controller.getModule().size(); i++) {
+			hashModule.put(i, Module.create(controller.getModule().get(i)));
+		}
 		
+		return Controller.builder()
+				.hashModule(hashModule)
+				.build();
 	}
 }

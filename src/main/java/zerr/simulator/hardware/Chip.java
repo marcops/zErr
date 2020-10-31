@@ -4,13 +4,10 @@ import java.util.HashMap;
 
 import lombok.Builder;
 import zerr.configuration.model.ChipConfModel;
-import zerr.util.BitSetFunction;
 
-//@Data
 @Builder
 public final class Chip {
 	private HashMap<Integer, Bank> hashBank;
-//	private Integer amount;
 	
 	public static Chip create(ChipConfModel chip) {
 		HashMap<Integer, Bank> hash = new HashMap<>();
@@ -20,12 +17,11 @@ public final class Chip {
 		
 		return Chip.builder()
 				.hashBank(hash)
-//				.amount(chip.getAmount())
 				.build();
 	}
 
-	public void exec(ChannelRequest request) {
-		int bank = BitSetFunction.toInt(request.getBank());
+	public void exec(ChannelEvent request) {
+		int bank = request.getBank().toInt();
 		if(bank < 0 || bank >= hashBank.size()) {
 			System.err.println("FATAL: Wrong bank");
 			System.exit(-1);

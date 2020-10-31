@@ -1,7 +1,5 @@
 package zerr.configuration.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -15,6 +13,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HardwareConfModel {
-	private List<ModuleConfModel> module;
 	private ControllerConfModel controller;
 }

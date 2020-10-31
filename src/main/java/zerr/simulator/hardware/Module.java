@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import lombok.Builder;
 import zerr.configuration.model.ModuleConfModel;
-import zerr.util.BitSetFunction;
 
 //TODO JEDEC DDR4 SPD
 //@Data
@@ -12,11 +11,10 @@ import zerr.util.BitSetFunction;
 public final class Module extends Thread {
 	
 	private HashMap<Integer, Rank> hashRank;
-	private Controller controller;
-//	private Channel channel;
 	private Integer amount;
-
-	public static Module create(ModuleConfModel module, Controller controller) {
+	private ChannelBuffer channelBuffer;
+	
+	public static Module create(ModuleConfModel module) {
 		HashMap<Integer, Rank> hash = new HashMap<>();
 		for (int i = 0; i < module.getRank().size(); i++)
 			for (int j = 0; j < module.getAmount(); j++)
@@ -24,21 +22,25 @@ public final class Module extends Thread {
 		
 		Module mod = Module.builder()
 				.hashRank(hash)
-				.controller(controller)
+				.channelBuffer(ChannelBuffer.create(module.getBufferSize()))
 				.amount(module.getAmount())
-//				.channel(Channel.create(module.getChannel()))
 				.build();
 		mod.start();
 		return mod;
 	}
-
+	
+	public ChannelEvent sendCommand(ChannelEvent e, boolean hasAnswer) throws InterruptedException {
+		channelBuffer.getIn().add(e);
+		if(hasAnswer) return channelBuffer.getOut().take();
+		return e;
+	}
+	
 	@Override
 	public void run() {
 		while(true) {
-			
 			try {
-				ChannelRequest request = controller.getQueueRequest().take();
-				int rank = BitSetFunction.toInt(request.getBankGroup());
+				ChannelEvent request = channelBuffer.getIn().take();
+				int rank = request.getBankGroup().toInt();
 				if(rank < 0 || rank >= amount) {
 					System.err.println("FATAL: Wrong rank");
 					System.exit(-1);
@@ -49,8 +51,6 @@ public final class Module extends Thread {
 				System.err.println("FATAL: Wrong take");
 				System.exit(-1);
 			}
-			
-			
 			
 		}
 	}

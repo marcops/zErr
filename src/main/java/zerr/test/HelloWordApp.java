@@ -9,7 +9,7 @@ public class HelloWordApp {
 		this.os = os;
 	}
 
-	public void exec() {
+	public void exec() throws InterruptedException {
 		int address = os.write("Hello Word".getBytes());
 		System.out.println(os.read(address));
 	}

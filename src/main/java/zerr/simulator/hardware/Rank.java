@@ -5,11 +5,9 @@ import java.util.HashMap;
 import lombok.Builder;
 import zerr.configuration.model.RankConfModel;
 
-//@Data
 @Builder
 public final class Rank {
 	private HashMap<Integer, Chip> hashChip;
-//	private int amount;
 
 	public static Rank create(RankConfModel chip) {
 		HashMap<Integer, Chip> hash = new HashMap<>();
@@ -19,12 +17,11 @@ public final class Rank {
 		
 		return Rank.builder()
 				.hashChip(hash)
-//				.amount(chip.getAmount())
 				.build();
 	}
 
-	public void exec(ChannelRequest request) {
-		for(int i =0;i<hashChip.size();i++) {
+	public void exec(ChannelEvent request) {
+		for (int i = 0; i < hashChip.size(); i++) {
 			hashChip.get(i).exec(request);
 		}
 	}
