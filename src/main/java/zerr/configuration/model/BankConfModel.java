@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BankConfModel {
-//	private ControllerConfModel controller;
 	private Integer amount;
-	private MatrixConfModel matrix;
+	private CellConfModel cell;
 }

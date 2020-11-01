@@ -3,29 +3,36 @@ package zerr.simulator.hardware;
 import java.util.HashMap;
 
 import lombok.Builder;
+import lombok.Data;
 import zerr.configuration.model.ModuleConfModel;
 
 //TODO JEDEC DDR4 SPD
-//@Data
+@Data
 @Builder
-public final class Module extends Thread {
+public final class Module {
 	
 	private HashMap<Integer, Rank> hashRank;
 	private Integer amount;
 	private ChannelBuffer channelBuffer;
+	private Integer dataSize;
+	private ModuleExecutor executor;
 	
 	public static Module create(ModuleConfModel module) {
+		//Every chip receive dataSize/chipAmount
 		HashMap<Integer, Rank> hash = new HashMap<>();
 		for (int i = 0; i < module.getRank().size(); i++)
 			for (int j = 0; j < module.getAmount(); j++)
-				hash.put(j, Rank.create(module.getRank().get(i)));
+				hash.put(j, Rank.create(module.getRank().get(i), 
+						module.getChannel().getDataSize() / module.getRank().get(i).getChip().get(0).getAmount()));
 		
 		Module mod = Module.builder()
 				.hashRank(hash)
 				.channelBuffer(ChannelBuffer.create(module.getBufferSize()))
 				.amount(module.getAmount())
+				.dataSize(module.getChannel().getDataSize())
 				.build();
-		mod.start();
+		mod.setExecutor(new ModuleExecutor(mod));
+		mod.getExecutor().start();
 		return mod;
 	}
 	
@@ -33,25 +40,5 @@ public final class Module extends Thread {
 		channelBuffer.getIn().add(e);
 		if(hasAnswer) return channelBuffer.getOut().take();
 		return e;
-	}
-	
-	@Override
-	public void run() {
-		while(true) {
-			try {
-				ChannelEvent request = channelBuffer.getIn().take();
-				int rank = request.getBankGroup().toInt();
-				if(rank < 0 || rank >= amount) {
-					System.err.println("FATAL: Wrong rank");
-					System.exit(-1);
-				}
-				hashRank.get(rank).exec(request);
-			} catch (InterruptedException e) {
-				System.err.println(e);
-				System.err.println("FATAL: Wrong take");
-				System.exit(-1);
-			}
-			
-		}
 	}
 }

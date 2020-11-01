@@ -8,23 +8,21 @@
         "bufferSize" : 64,
         "channel" : {          
           "dataSize" : 72,
-          "adressSize" : 17,
-          "bankSize" : 2,
-          "bankGroupSize" : 2
+          "adressSize" : 17
         },
         "rank" : [ {
           "amount" : 1,
+          //chips diferentes dentro do mesmo modulo?
           "chip" : [ {
             "amount" : 9,
+            //bancos diferentes dentro do mesmo chip?
             "bank" : [ {
               "amount" : 4,
-              "matrix" : {
-                "amount" : 8,
                 "cell" : {
+                  "amount" : 8,
                   "row" : 4000,
                   "columns" : 1000
                 }
-              }
             } ]
           } ]
         } ]

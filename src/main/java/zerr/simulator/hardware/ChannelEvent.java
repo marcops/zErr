@@ -5,7 +5,7 @@ import lombok.Data;
 import zerr.util.Bits;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class ChannelEvent {
 	private Bits data;
 	private Bits address;

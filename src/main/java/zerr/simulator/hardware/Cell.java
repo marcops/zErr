@@ -16,7 +16,8 @@ public final class Cell {
 
 	private void loadRow(Integer row) {
 		currentRow = row * columnsLenght;
-		senseAmplifier = cell.split(currentRow, columnsLenght);
+		senseAmplifier = cell.subbit(currentRow, columnsLenght);
+//		System.out.println("senserow["+currentRow+"]=" + senseAmplifier.toBitString(64));
 	}
 	
 	public boolean exec(ControlSignal sinal, Bits address, boolean bit) {
@@ -24,12 +25,14 @@ public final class Cell {
 		if(sinal.isLoadColumn()) return loadColumn(address.toInt());
 		if(sinal.isSetSenseAmpColumn()) return setSenseAmp(address.toInt() , bit);
 		if(sinal.isToWriteCell()) return writeCell();
-		return false;
+		if(sinal.isDataOkToRead()) return loadColumn();
+		return bit;
 	}
 	
 	private boolean writeCell() {
 		boolean bit = senseAmplifier.get(currentColumn);
 		cell.set(currentRow + currentColumn, bit);
+//		System.out.println("wcell["+currentRow+","+currentColumn+"]=" + cell.toBitString(64));
 		return bit;
 	}
 
@@ -47,6 +50,11 @@ public final class Cell {
 				.build();
 	}
 
+	private boolean loadColumn() {
+//		System.out.println("rcell["+currentRow+","+currentColumn+"]=" + cell.toBitString(64));
+		return senseAmplifier.get(currentColumn);
+	}
+	
 	private boolean loadColumn(Integer address) {
 		currentColumn = address;
 		return senseAmplifier.get(address);

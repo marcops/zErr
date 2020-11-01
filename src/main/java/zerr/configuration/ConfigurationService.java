@@ -3,6 +3,7 @@ package zerr.configuration;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import zerr.configuration.model.ZErrConfModel;
@@ -15,6 +16,8 @@ public class ConfigurationService {
 						.getClassLoader()
 						.getResource(configuration).toURI()));
 
-		return new ObjectMapper().readValue(jsonData, ZErrConfModel.class);
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+		return objectMapper.readValue(jsonData, ZErrConfModel.class);
 	}
 }

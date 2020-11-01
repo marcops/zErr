@@ -20,25 +20,22 @@ public class OperationalSystem {
 
 	//return virtualMemory (notNow)
 	//TODO fazer o controle da vmem
-	public int write(byte []msg) throws InterruptedException {
-		for (int i = 0; i < msg.length; i++) {
-			System.out.println(msg[i]);
-			
-			//TODO how define it
-			Bits address = Bits.from("00000000000000000");
-			Bits bank = Bits.from(0); 
-			Bits bankGroup = Bits.from(0);
-			final Bits data = Bits.from(msg[i]);
-			
-			memoryControlerDriver.writeEvent(address, bank, bankGroup, data);
-			
-		}
-		return 0;
+	public void write(Bits msg, int vAddress) throws InterruptedException {
+		Bits address = Bits.from(vAddress);
+//		System.out.println("vAddress["+vAddress+"]="+address.toBitString(64));
+		//TODO bank,rank
+		Bits bank = Bits.from(0);
+		Bits bankGroup = Bits.from(0);
+		memoryControlerDriver.writeEvent(address, bank, bankGroup, msg);
 	}
 
-	public byte[] read(int address) {
-		System.out.println(address);
-		return null;
+	public Bits read(int vAddress) throws InterruptedException {
+		Bits addressTest = Bits.from(vAddress);
+		//TODO bank,rank
+		Bits bank = Bits.from(0); 
+		Bits bankGroup = Bits.from(0);
+		
+		return memoryControlerDriver.readEvent(addressTest, bank, bankGroup);
 	}
 
 }

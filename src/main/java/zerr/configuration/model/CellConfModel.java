@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CellConfModel {
+	private Integer amount;
 	private Integer row;
 	private Integer columns;
 }

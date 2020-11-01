@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 public class ChannelConfModel {
 	private Integer dataSize;
 	private Integer adressSize;
-	private Integer bankSize;
-	private Integer bankGroupSize;
+//	private Integer bankSize;
+//	private Integer bankGroupSize;
 }
