@@ -5,27 +5,27 @@
       "module" : [ {
         "amount" : 1,
         "name" : "oldestDDR",
-        "bufferSize" : 64,
-        "channel" : {          
-          "dataSize" : 72,
-          "adressSize" : 17
+        "bufferSize" : 99,
+        "channel" : {
+          "dataSize" : 64
         },
-        "rank" : [ {
+        "rank" : {
           "amount" : 1,
-          //chips diferentes dentro do mesmo modulo?
-          "chip" : [ {
-            "amount" : 9,
-            //bancos diferentes dentro do mesmo chip?
-            "bank" : [ {
-              "amount" : 4,
+          "chip" : {
+            "amount" : 8,
+            "bankGroup" : {
+              "amount" : 1,
+              "bank" : {
+                "amount" : 4,
                 "cell" : {
                   "amount" : 8,
                   "row" : 4000,
                   "columns" : 1000
                 }
-            } ]
-          } ]
-        } ]
+              }
+            }
+          }
+        }
       } ]
     }
   }

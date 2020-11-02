@@ -9,8 +9,10 @@ import zerr.util.Bits;
 public class ChannelEvent {
 	private Bits data;
 	private Bits address;
-	private Bits bank;
+	
+	private Bits rank;
 	private Bits bankGroup;
+	private Bits bank;
 
 	private ControlSignal controlSignal;
 

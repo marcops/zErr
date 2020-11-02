@@ -9,7 +9,7 @@ import zerr.util.Bits;
 
 @Builder
 @Data
-public final class MemoryControlerDriver {
+public final class MemoryDriver {
 	private Controller controller;
 
 	private static final ControlSignal[] WRITE_EVENT = { 
@@ -22,31 +22,33 @@ public final class MemoryControlerDriver {
 			ControlSignal.loadColumn(),
 			ControlSignal.dataOkToRead() };
 
-	public void writeEvent(Bits address, Bits bank, Bits bankGroup, final Bits data) throws InterruptedException {
+	public void writeEvent(Bits address, Bits bank, Bits bankGroup, Bits rank, final Bits data) throws InterruptedException {
 		for (int i = 0; i < WRITE_EVENT.length; i++) {
 			controller.getHashModule().get(0).sendCommand(ChannelEvent.builder()
 					.address(address)
 					.bank(bank)
 					.bankGroup(bankGroup)
+					.rank(rank)
 					.data(data)
 					.controlSignal(WRITE_EVENT[i])
 					.build(), false);
 		}
 	}
 
-	public static MemoryControlerDriver create(Controller controller) {
-		return MemoryControlerDriver
+	public static MemoryDriver create(Controller controller) {
+		return MemoryDriver
 				.builder()
 				.controller(controller)
 				.build();
 	}
 
-	public Bits readEvent(Bits address, Bits bank, Bits bankGroup) throws InterruptedException {
+	public Bits readEvent(Bits address, Bits bank, Bits bankGroup, Bits rank) throws InterruptedException {
 		for (int i = 0; i < READ_EVENT.length; i++) {
 			ChannelEvent channel = controller.getHashModule().get(0).sendCommand(ChannelEvent.builder()
 					.address(address)
 					.bank(bank)
 					.bankGroup(bankGroup)
+					.rank(rank)
 					.data(new Bits())
 					.controlSignal(READ_EVENT[i])
 					.build(), i == READ_EVENT.length-1);

@@ -3,36 +3,32 @@ package zerr.simulator.hardware;
 import java.util.HashMap;
 
 import lombok.Builder;
-import zerr.configuration.model.BankConfModel;
+import zerr.configuration.model.BankGroupConfModel;
 import zerr.configuration.model.ChipConfModel;
 import zerr.util.Bits;
 
 @Builder
 public final class Chip {
-	private HashMap<Integer, Bank> hashBank;
+	private HashMap<Integer, BankGroup> hashBankGroup;
 	
 	public static Chip create(ChipConfModel chip) {
-		HashMap<Integer, Bank> hash = new HashMap<>();
-		for (int i = 0; i < chip.getBank().size(); i++) {
-			BankConfModel bank = chip.getBank().get(i);
-			for (int j = 0; j < bank.getAmount(); j++) {
-				hash.put((i * j) + j, Bank.create(bank));
-			}
+		HashMap<Integer, BankGroup> hash = new HashMap<>();
+		BankGroupConfModel bankGroup = chip.getBankGroup();
+		for (int j = 0; j < bankGroup.getAmount(); j++) {
+			hash.put(j, BankGroup.create(chip.getBankGroup()));
 		}
 		
 		return Chip.builder()
-				.hashBank(hash)
+				.hashBankGroup(hash)
 				.build();
 	}
 
 	public Bits exec(ChannelEvent request) {
-		int bank = request.getBank().toInt();
-		if(bank < 0 || bank >= hashBank.size()) {
+		int bankGroup = request.getBankGroup().toInt();
+		if(bankGroup < 0 || bankGroup >= hashBankGroup.size()) {
 			System.err.println("FATAL: Wrong bank");
 			System.exit(-1);
 		}
-		
-		return hashBank.get(bank).exec(request.getControlSignal(),request.getAddress(),request.getData());
-		
+		return hashBankGroup.get(bankGroup).exec(request);
 	}
 }

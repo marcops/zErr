@@ -14,11 +14,9 @@ public final class Rank {
 	
 	public static Rank create(RankConfModel rank, int chipDataSize) {
 		HashMap<Integer, Chip> hash = new HashMap<>();
-		for (int i = 0; i < rank.getChip().size(); i++) {
-			ChipConfModel chip = rank.getChip().get(i);
-			for (int j = 0; j < chip.getAmount(); j++)
-				hash.put((i * j) + j, Chip.create(chip));
-		}
+		ChipConfModel chip = rank.getChip();
+		for (int j = 0; j < chip.getAmount(); j++)
+			hash.put(j, Chip.create(chip));
 		
 		return Rank.builder()
 				.hashChip(hash)

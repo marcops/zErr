@@ -12,9 +12,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChannelConfModel {
-	private Integer dataSize;
-//	private Integer adressSize;
-//	private Integer bankSize;
-//	private Integer bankGroupSize;
+public class BankGroupConfModel {
+	private Integer amount;
+	private BankConfModel bank;
 }

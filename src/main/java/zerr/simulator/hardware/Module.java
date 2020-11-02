@@ -20,10 +20,9 @@ public final class Module {
 	public static Module create(ModuleConfModel module) {
 		//Every chip receive dataSize/chipAmount
 		HashMap<Integer, Rank> hash = new HashMap<>();
-		for (int i = 0; i < module.getRank().size(); i++)
-			for (int j = 0; j < module.getAmount(); j++)
-				hash.put(j, Rank.create(module.getRank().get(i), 
-						module.getChannel().getDataSize() / module.getRank().get(i).getChip().get(0).getAmount()));
+		for (int j = 0; j < module.getAmount(); j++)
+			hash.put(j, Rank.create(module.getRank(), 
+					module.getChannel().getDataSize() / module.getRank().getChip().getAmount()));
 		
 		Module mod = Module.builder()
 				.hashRank(hash)

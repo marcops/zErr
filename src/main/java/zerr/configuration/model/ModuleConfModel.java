@@ -1,7 +1,5 @@
 package zerr.configuration.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -17,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class ModuleConfModel {
 	private String name;
 	private Integer amount;
-	private List<RankConfModel> rank;
+	private RankConfModel rank;
 	private ChannelConfModel channel;
 	private Integer bufferSize;
 }

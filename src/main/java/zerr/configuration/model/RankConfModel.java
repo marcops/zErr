@@ -1,7 +1,5 @@
 package zerr.configuration.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -16,5 +14,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RankConfModel {
 	private Integer amount;
-	private List<ChipConfModel> chip;
+	private ChipConfModel chip;
 }
