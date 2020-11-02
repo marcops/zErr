@@ -12,16 +12,16 @@ public final class Cell {
 	private Bits cell;
 	private Bits senseAmplifier;
 	
-	private Integer columnsLenght;
-	private Integer rowLenght;
+	private Integer columnsLength;
+	private Integer rowLength;
 	
 	private Integer currentRow;
 	private Integer currentColumn;
 	
 
 	private void loadRow(Integer row) {
-		currentRow = row * columnsLenght;
-		senseAmplifier = cell.subbit(currentRow, columnsLenght);
+		currentRow = row * columnsLength;
+		senseAmplifier = cell.subbit(currentRow, columnsLength);
 //		System.out.println("senserow["+currentRow+"]=" + senseAmplifier.toBitString(64));
 	}
 	
@@ -49,8 +49,8 @@ public final class Cell {
 
 	public static Cell create(CellConfModel cell) {
 		return Cell.builder()
-				.rowLenght(cell.getRow())
-				.columnsLenght(cell.getColumns())
+				.rowLength(cell.getRow())
+				.columnsLength(cell.getColumns())
 				.senseAmplifier(new Bits(cell.getColumns()))
 				.cell(new Bits(cell.getRow() * cell.getColumns()))
 				.build();

@@ -9,7 +9,7 @@ import zerr.util.Bits;
 
 @Builder
 @Data
-public final class MemoryDriver {
+public final class MemoryController {
 	private Controller controller;
 
 //	private static final ControlSignal[] WRITE_EVENT = { 
@@ -22,8 +22,8 @@ public final class MemoryDriver {
 //			ControlSignal.loadColumn(),
 //			ControlSignal.dataOkToRead() };
 
-	public void writeEvent(Bits addressRow, Bits addressCol, Bits bank, Bits bankGroup, Bits rank, final Bits data) throws InterruptedException {
-			controller.getModule().sendCommand(ChannelEvent.builder()
+	public void writeEvent(Bits addressRow, Bits addressCol, Bits bank, Bits bankGroup, Bits rank, int mod, final Bits data) throws InterruptedException {
+			controller.getHashModule().get(mod).sendCommand(ChannelEvent.builder()
 					.address(addressRow)
 					.bank(bank)
 					.bankGroup(bankGroup)
@@ -32,7 +32,7 @@ public final class MemoryDriver {
 					.controlSignal(ControlSignal.loadRow())
 					.build(), false);
 			
-			controller.getModule().sendCommand(ChannelEvent.builder()
+			controller.getHashModule().get(mod).sendCommand(ChannelEvent.builder()
 					.address(addressCol)
 					.bank(bank)
 					.bankGroup(bankGroup)
@@ -41,7 +41,7 @@ public final class MemoryDriver {
 					.controlSignal(ControlSignal.setSenseAmpColumn())
 					.build(), false);
 			
-			controller.getModule().sendCommand(ChannelEvent.builder()
+			controller.getHashModule().get(mod).sendCommand(ChannelEvent.builder()
 //					.address(new Bits())
 					.bank(bank)
 					.bankGroup(bankGroup)
@@ -51,15 +51,15 @@ public final class MemoryDriver {
 					.build(), false);
 	}
 
-	public static MemoryDriver create(Controller controller) {
-		return MemoryDriver
+	public static MemoryController create(Controller controller) {
+		return MemoryController
 				.builder()
 				.controller(controller)
 				.build();
 	}
 
-	public Bits readEvent(Bits addressRow,Bits addressCol, Bits bank, Bits bankGroup, Bits rank) throws InterruptedException {
-			controller.getModule().sendCommand(ChannelEvent.builder()
+	public Bits readEvent(Bits addressRow,Bits addressCol, Bits bank, Bits bankGroup, Bits rank, int mod) throws InterruptedException {
+			controller.getHashModule().get(mod).sendCommand(ChannelEvent.builder()
 					.address(addressRow)
 					.bank(bank)
 					.bankGroup(bankGroup)
@@ -68,7 +68,7 @@ public final class MemoryDriver {
 					.controlSignal(ControlSignal.loadRow())
 					.build(), false);
 			
-			controller.getModule().sendCommand(ChannelEvent.builder()
+			controller.getHashModule().get(mod).sendCommand(ChannelEvent.builder()
 					.address(addressCol)
 					.bank(bank)
 					.bankGroup(bankGroup)
@@ -77,7 +77,7 @@ public final class MemoryDriver {
 					.controlSignal(ControlSignal.loadColumn())
 					.build(), false);
 			
-			return controller.getModule().sendCommand(ChannelEvent.builder()
+			return controller.getHashModule().get(mod).sendCommand(ChannelEvent.builder()
 //					.address(addressRow)
 					.bank(bank)
 					.bankGroup(bankGroup)

@@ -9,28 +9,17 @@ import zerr.util.Bits;
 @Builder
 public class OperationalSystem {
 	private Hardware hardware;
-	private MemoryDriver memoryControlerDriver;
+	private MemoryController memoryDriver;
 	private Integer memorySize;
+	private VirtualAddress virtualAddress;
 	
 	public static OperationalSystem create(Hardware hwd) {
-//		createVirtualAddress(hwd);
 		return OperationalSystem.builder()
 				.hardware(hwd)
-				.memoryControlerDriver(MemoryDriver.create(hwd.getController()))
+				.memoryDriver(MemoryController.create(hwd.getController()))
+				.virtualAddress(VirtualAddress.create(hwd))
 				.build();
 	}
-
-//	private static void createVirtualAddress(Hardware hwd) {
-//		memorySize =0;
-//		Rank r = hwd.getController().getModule().getHashRank().get(0);
-//		Chip c = r.getHashChip().get(0);
-//		BankGroup bg = c.getHashBankGroup().get(0);
-//		Bank b = bg.getHashBank().get(0);
-//		Cell cell = b.getHashCell().get(0);
-//		cell.getColumnsLenght() * cell.getColumnsLenght();
-//			
-//		System.out.println(memorySize);
-//	}
 
 	//TODO fazer o controle da vmem
 	public void write(Bits[] msg, int vAddress) throws InterruptedException {
@@ -44,7 +33,7 @@ public class OperationalSystem {
 		Bits bank = Bits.from(0);
 		Bits bankGroup = Bits.from(0);
 		Bits rank = Bits.from(0);
-		memoryControlerDriver.writeEvent(address, address, bank, bankGroup, rank, msg);
+		memoryDriver.writeEvent(address, address, bank, bankGroup, rank, 0, msg);
 	}
 
 	public Bits read(int vAddress) throws InterruptedException {
@@ -53,7 +42,7 @@ public class OperationalSystem {
 		Bits bank = Bits.from(0); 
 		Bits bankGroup = Bits.from(0);
 		Bits rank = Bits.from(0);
-		return memoryControlerDriver.readEvent(addressTest,addressTest, bank, bankGroup , rank);
+		return memoryDriver.readEvent(addressTest, addressTest, bank, bankGroup, rank, 0);
 	}
 
 }
