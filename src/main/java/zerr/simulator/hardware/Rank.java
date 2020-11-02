@@ -3,11 +3,13 @@ package zerr.simulator.hardware;
 import java.util.HashMap;
 
 import lombok.Builder;
+import lombok.Data;
 import zerr.configuration.model.ChipConfModel;
 import zerr.configuration.model.RankConfModel;
 import zerr.util.Bits;
 
 @Builder
+@Data
 public final class Rank {
 	private HashMap<Integer, Chip> hashChip;
 	private Integer chipDataSize;

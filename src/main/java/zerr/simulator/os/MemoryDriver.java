@@ -12,27 +12,43 @@ import zerr.util.Bits;
 public final class MemoryDriver {
 	private Controller controller;
 
-	private static final ControlSignal[] WRITE_EVENT = { 
-			ControlSignal.loadRow(), 
-			ControlSignal.setSenseAmpColumn(),
-			ControlSignal.writeCell() };
-	
-	private static final ControlSignal[] READ_EVENT = { 
-			ControlSignal.loadRow(), 
-			ControlSignal.loadColumn(),
-			ControlSignal.dataOkToRead() };
+//	private static final ControlSignal[] WRITE_EVENT = { 
+//			ControlSignal.loadRow(), 
+//			ControlSignal.setSenseAmpColumn(),
+//			ControlSignal.writeCell() };
+//	
+//	private static final ControlSignal[] READ_EVENT = { 
+//			ControlSignal.loadRow(), 
+//			ControlSignal.loadColumn(),
+//			ControlSignal.dataOkToRead() };
 
-	public void writeEvent(Bits address, Bits bank, Bits bankGroup, Bits rank, final Bits data) throws InterruptedException {
-		for (int i = 0; i < WRITE_EVENT.length; i++) {
-			controller.getHashModule().get(0).sendCommand(ChannelEvent.builder()
-					.address(address)
+	public void writeEvent(Bits addressRow, Bits addressCol, Bits bank, Bits bankGroup, Bits rank, final Bits data) throws InterruptedException {
+			controller.getModule().sendCommand(ChannelEvent.builder()
+					.address(addressRow)
 					.bank(bank)
 					.bankGroup(bankGroup)
 					.rank(rank)
 					.data(data)
-					.controlSignal(WRITE_EVENT[i])
+					.controlSignal(ControlSignal.loadRow())
 					.build(), false);
-		}
+			
+			controller.getModule().sendCommand(ChannelEvent.builder()
+					.address(addressCol)
+					.bank(bank)
+					.bankGroup(bankGroup)
+					.rank(rank)
+					.data(data)
+					.controlSignal(ControlSignal.setSenseAmpColumn())
+					.build(), false);
+			
+			controller.getModule().sendCommand(ChannelEvent.builder()
+//					.address(new Bits())
+					.bank(bank)
+					.bankGroup(bankGroup)
+					.rank(rank)
+					.data(data)
+					.controlSignal(ControlSignal.writeCell())
+					.build(), false);
 	}
 
 	public static MemoryDriver create(Controller controller) {
@@ -42,20 +58,33 @@ public final class MemoryDriver {
 				.build();
 	}
 
-	public Bits readEvent(Bits address, Bits bank, Bits bankGroup, Bits rank) throws InterruptedException {
-		for (int i = 0; i < READ_EVENT.length; i++) {
-			ChannelEvent channel = controller.getHashModule().get(0).sendCommand(ChannelEvent.builder()
-					.address(address)
+	public Bits readEvent(Bits addressRow,Bits addressCol, Bits bank, Bits bankGroup, Bits rank) throws InterruptedException {
+			controller.getModule().sendCommand(ChannelEvent.builder()
+					.address(addressRow)
 					.bank(bank)
 					.bankGroup(bankGroup)
 					.rank(rank)
 					.data(new Bits())
-					.controlSignal(READ_EVENT[i])
-					.build(), i == READ_EVENT.length-1);
+					.controlSignal(ControlSignal.loadRow())
+					.build(), false);
 			
-			if(i == READ_EVENT.length-1) return channel.getData();
-		}
-		return null;
+			controller.getModule().sendCommand(ChannelEvent.builder()
+					.address(addressCol)
+					.bank(bank)
+					.bankGroup(bankGroup)
+					.rank(rank)
+					.data(new Bits())
+					.controlSignal(ControlSignal.loadColumn())
+					.build(), false);
+			
+			return controller.getModule().sendCommand(ChannelEvent.builder()
+//					.address(addressRow)
+					.bank(bank)
+					.bankGroup(bankGroup)
+					.rank(rank)
+					.data(new Bits())
+					.controlSignal(ControlSignal.dataOkToRead())
+					.build(), true).getData();
 	}
 
 }

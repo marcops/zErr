@@ -3,9 +3,11 @@ package zerr.simulator.hardware;
 import java.util.HashMap;
 
 import lombok.Builder;
+import lombok.Data;
 import zerr.configuration.model.BankConfModel;
 import zerr.util.Bits;
 
+@Data
 @Builder
 public final class Bank {
 	private HashMap<Integer,Cell> hashCell;

@@ -3,11 +3,13 @@ package zerr.simulator.hardware;
 import java.util.HashMap;
 
 import lombok.Builder;
+import lombok.Data;
 import zerr.configuration.model.BankConfModel;
 import zerr.configuration.model.BankGroupConfModel;
 import zerr.util.Bits;
 
 @Builder
+@Data
 public final class BankGroup {
 	private HashMap<Integer, Bank> hashBank;
 	

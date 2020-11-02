@@ -1,18 +1,23 @@
 package zerr.simulator.hardware;
 
 import lombok.Builder;
+import lombok.Data;
 import zerr.configuration.model.CellConfModel;
 import zerr.util.Bits;
 
+@Data
 @Builder
 public final class Cell {
 
 	private Bits cell;
 	private Bits senseAmplifier;
+	
 	private Integer columnsLenght;
+	private Integer rowLenght;
 	
 	private Integer currentRow;
 	private Integer currentColumn;
+	
 
 	private void loadRow(Integer row) {
 		currentRow = row * columnsLenght;
@@ -44,6 +49,7 @@ public final class Cell {
 
 	public static Cell create(CellConfModel cell) {
 		return Cell.builder()
+				.rowLenght(cell.getRow())
 				.columnsLenght(cell.getColumns())
 				.senseAmplifier(new Bits(cell.getColumns()))
 				.cell(new Bits(cell.getRow() * cell.getColumns()))
