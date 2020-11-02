@@ -20,6 +20,11 @@ public class OperationalSystem {
 
 	//return virtualMemory (notNow)
 	//TODO fazer o controle da vmem
+	
+	public void write(Bits[] msg, int vAddress) throws InterruptedException {
+		for (int i = 0; i < msg.length; i++) write(msg[i], vAddress + i);
+	}
+	
 	public void write(Bits msg, int vAddress) throws InterruptedException {
 		Bits address = Bits.from(vAddress);
 //		System.out.println("vAddress["+vAddress+"]="+address.toBitString(64));

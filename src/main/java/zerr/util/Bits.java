@@ -16,14 +16,15 @@ public class Bits extends BitSet {
 		return bitSet2Bits(BitSet.valueOf(new byte[] { msg }));
 	}
 	
-	public static Bits from(final byte[] msgs) {
-		Bits b = new Bits();
+	public static Bits[] from(final byte[] msgs) {
+		Bits[] b = new Bits[msgs.length];
 		for(int i = 0; i< msgs.length;i++)
-			b.append(from(msgs[i]));
+			b[i] = from(msgs[i]);
 		return b;
 	}
-
-	public static Bits from(final String s) {
+	
+	
+	public static Bits[] from(final String s) {
 		return from(s.getBytes());
 	}
 	
