@@ -8,11 +8,13 @@ import org.junit.jupiter.api.Assertions;
 
 import org.junit.jupiter.api.Test;
 
-public class VirtualAddressTest {
+import zerr.simulator.Util;
+
+class VirtualAddressTest {
 
 	@Test
-	public void validate4Bytes() throws Exception {
-		VirtualAddress vAddress = VirtualAddress.create(DataFactory.create4bytesHardware());
+	void validate4Bytes() throws Exception {
+		VirtualAddress vAddress = VirtualAddress.create(Util.loadConfig("4bytes.json"));
 
 		long address = 0;
 		assertEquals(0L, vAddress.getModule(address));
@@ -49,18 +51,18 @@ public class VirtualAddressTest {
 	}
 
 	@Test
-	public void exceed4Bytes() throws Exception {
-		VirtualAddress vAddress = VirtualAddress.create(DataFactory.create4bytesHardware());
+	void exceed4Bytes() throws Exception {
+		VirtualAddress vAddress = VirtualAddress.create(Util.loadConfig("4bytes.json"));
 
 		long address = 4;
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			vAddress.getModule(address);
 		});
 	}
-	
+
 	@Test
-	public void testBank() throws Exception {
-		VirtualAddress vAddress = VirtualAddress.create(DataFactory.loadConfig("test4bytes2bank.json"));
+	void testBank() throws Exception {
+		VirtualAddress vAddress = VirtualAddress.create(Util.loadConfig("4bytes2bank.json"));
 
 		long address = 4;
 		assertEquals(0L, vAddress.getModule(address));
@@ -70,10 +72,10 @@ public class VirtualAddressTest {
 		assertEquals(0L, vAddress.getRow(address));
 		assertEquals(0L, vAddress.getColumn(address));
 	}
-	
+
 	@Test
-	public void testGroupBank() throws Exception {
-		VirtualAddress vAddress = VirtualAddress.create(DataFactory.loadConfig("test4bytes2Groupbank.json"));
+	void testGroupBank() throws Exception {
+		VirtualAddress vAddress = VirtualAddress.create(Util.loadConfig("4bytes2Groupbank.json"));
 
 		long address = 4;
 		assertEquals(0L, vAddress.getModule(address));
@@ -83,10 +85,10 @@ public class VirtualAddressTest {
 		assertEquals(0L, vAddress.getRow(address));
 		assertEquals(0L, vAddress.getColumn(address));
 	}
-	
+
 	@Test
-	public void testRank() throws Exception {
-		VirtualAddress vAddress = VirtualAddress.create(DataFactory.loadConfig("test4bytes2Rank.json"));
+	void testRank() throws Exception {
+		VirtualAddress vAddress = VirtualAddress.create(Util.loadConfig("4bytes2Rank.json"));
 
 		long address = 4;
 		assertEquals(0L, vAddress.getModule(address));
