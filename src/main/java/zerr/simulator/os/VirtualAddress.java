@@ -31,8 +31,8 @@ public class VirtualAddress {
 		int bank = bg.getHashBank().size();
 
 		Cell c = b.getHashCell().get(0);
-		int row = c.getRowLength();
-		int column = c.getColumnsLength();
+		long row = c.getRowLength();
+		long column = c.getColumnsLength();
 
 		long cellSize = row * column;
 		long bankSize = cellSize * bank;

@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import zerr.configuration.model.ModuleConfModel;
 
-//TODO JEDEC DDR4 SPD
 @Data
 @Builder
 public final class Module {
@@ -36,10 +35,13 @@ public final class Module {
 		return mod;
 	}
 	
-	public ChannelEvent sendCommand(ChannelEvent e, boolean hasAnswer) throws InterruptedException {
+	public ChannelEvent sendCommand(ChannelEvent e) {
 		channelBuffer.getIn().add(e);
-		if(hasAnswer) return channelBuffer.getOut().take();
 		return e;
 	}
 	
+	public ChannelEvent sendCommandAndWait(ChannelEvent e) throws InterruptedException {
+		channelBuffer.getIn().add(e);
+		return channelBuffer.getOut().take();
+	}
 }

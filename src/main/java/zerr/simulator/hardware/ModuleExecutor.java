@@ -1,7 +1,9 @@
 package zerr.simulator.hardware;
 
+import lombok.extern.slf4j.Slf4j;
 import zerr.util.Bits;
 
+@Slf4j
 public class ModuleExecutor extends Thread {
 	private Module module;
 
@@ -17,7 +19,7 @@ public class ModuleExecutor extends Thread {
 				int rank = request.getRank().toInt();
 				if (rank == -1) return;
 				if (rank < 0 || rank >= module.getAmount()) {
-					System.err.println("FATAL: Wrong rank");
+					log.error("FATAL: Wrong rank");
 					return;
 				}
 				Bits bits = module.getHashRank().get(rank).exec(request);
@@ -26,8 +28,7 @@ public class ModuleExecutor extends Thread {
 					module.getChannelBuffer().getOut().add(request);
 				}
 			} catch (InterruptedException e) {
-				System.err.println(e);
-				System.err.println("FATAL: Wrong take");
+				log.error("FATAL: Wrong take", e);
 				return;
 			}
 

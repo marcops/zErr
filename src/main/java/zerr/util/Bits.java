@@ -25,9 +25,9 @@ public class Bits extends BitSet {
 		return from(s.getBytes());
 	}
 	
-	public static Bits fromBitArray(final String s) {
-		return bitSet2Bits(BitSet.valueOf(new long[] { Long.parseLong(s, 2) }));
-	}
+//	public static Bits fromBitArray(final String s) {
+//		return bitSet2Bits(BitSet.valueOf(new long[] { Long.parseLong(s, 2) }));
+//	}
 
 	private static Bits bitSet2Bits(BitSet bs) {
 		Bits b = new Bits(bs.length());
@@ -35,19 +35,21 @@ public class Bits extends BitSet {
 		return b;
 	}
 
-	public static Bits from(int num) {
-		String bits = Integer.toBinaryString(num);
-		Bits bitSet = new Bits(bits.length());
-		for (int i = 0; i < bits.length(); i++) bitSet.set(i, bits.charAt((bits.length()-1)-i) == '1');
-		return bitSet;
-	}
+//	public static Bits from(int num) {
+//		String bits = Integer.toBinaryString(num);
+//		Bits bitSet = new Bits(bits.length());
+//		for (int i = 0; i < bits.length(); i++) bitSet.set(i, bits.charAt((bits.length()-1)-i) == '1');
+//		return bitSet;
+//	}
 
 	public int toInt() {
-		int bitInteger = 0;
-		final int INT_SIZE = 32;
-		for (int i = 0; i < INT_SIZE; i++)
-			if (this.get(i)) bitInteger |= (1 << i);
-		return bitInteger;
+		if (this.toLongArray().length == 0) return 0;
+		return (int) this.toLongArray()[0];
+	}
+	
+	public long toLong() {
+		if (this.toLongArray().length == 0) return 0;
+		return this.toLongArray()[0];
 	}
 
 	public Bits subbit(int position, int size) {
@@ -58,8 +60,9 @@ public class Bits extends BitSet {
 	}
 
 	public void append(Bits bits) {
+		int baseLenght = this.length(); 
 		for (int i = 0; i < bits.length(); i++) {
-			this.set(i, bits.get(i));
+			this.set(baseLenght + i, bits.get(i));
 		}
 	}
 	

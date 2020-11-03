@@ -1,15 +1,14 @@
 package zerr.simulator;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public final class Hamming {
 	private static final int VAR_2 = 2;
 	private static final int VAR_10 = 10;
 
 	private Hamming() {
 	}
-//	public static void debug(String msg, int[] a) {
-//		System.out.print(msg);
-//		debug(a);
-//	}
 //
 //	public static void debug(int[] a) {
 //		for (int i = 0; i < a.length; i++) {
@@ -25,7 +24,6 @@ public final class Hamming {
 		int j = 0;
 		int k = 0;
 		int parityCount = countParitySize(a);
-		// System.out.println("paritysize=" + parity_count);
 
 		b = new int[a.length + parityCount];
 
@@ -97,33 +95,27 @@ public final class Hamming {
 	public static int[] receive(int[] a, int parityCount) {
 		int errorLocation = getErrorPosition(a, parityCount);
 		if (errorLocation > a.length) {
-			System.out.println("MULTIPLES ERRORS" + errorLocation);
+			log.info("MULTIPLES ERRORS" + errorLocation);
 			errorLocation = 0;
 		}
 		int[] ham = a.clone();
 		if (errorLocation != 0)
 			ham = fixError(a, errorLocation);
 		// else
-		// System.out.println("There is no error in the received data.");
 
 		int power = parityCount - 1;
-		// System.out.println("Original data sent was:");
 		for (int i = ham.length; i > 0; i--) {
 			if ((int)Math.pow(VAR_2, power) != i) {
-				// System.out.print(ham[i - 1]);
 			} else {
 				power--;
 			}
 		}
-		// System.out.println();
 		return ham;
 	}
 
 	private static int[] fixError(int[] a, int errorLocation) {
-		System.out.println("Error is at location " + errorLocation + ".");
+		log.info("Error is at location " + errorLocation + ".");
 		a[errorLocation - 1] = (a[errorLocation - 1] + 1) % VAR_2;
-//		System.out.println("Corrected code is:");
-//		debug(a);
 		return a;
 	}
 

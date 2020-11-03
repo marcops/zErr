@@ -9,7 +9,7 @@ import zerr.util.Bits;
 @Builder
 public final class Cell {
 
-	private Bits cell;
+	private Bits icell;
 	private Bits senseAmplifier;
 	
 	private Integer columnsLength;
@@ -21,8 +21,7 @@ public final class Cell {
 
 	private void loadRow(Integer row) {
 		currentRow = row * columnsLength;
-		senseAmplifier = cell.subbit(currentRow, columnsLength);
-//		System.out.println("senserow["+currentRow+"]=" + senseAmplifier.toBitString(64));
+		senseAmplifier = icell.subbit(currentRow, columnsLength);
 	}
 	
 	public boolean exec(ControlSignal sinal, Bits address, boolean bit) {
@@ -36,8 +35,7 @@ public final class Cell {
 	
 	private boolean writeCell() {
 		boolean bit = senseAmplifier.get(currentColumn);
-		cell.set(currentRow + currentColumn, bit);
-//		System.out.println("wcell["+currentRow+","+currentColumn+"]=" + cell.toBitString(64));
+		icell.set(currentRow + currentColumn, bit);
 		return bit;
 	}
 
@@ -52,12 +50,11 @@ public final class Cell {
 				.rowLength(cell.getRow())
 				.columnsLength(cell.getColumns())
 				.senseAmplifier(new Bits(cell.getColumns()))
-				.cell(new Bits(cell.getRow() * cell.getColumns()))
+				.icell(new Bits(cell.getRow() * cell.getColumns()))
 				.build();
 	}
 
 	private boolean loadColumn() {
-//		System.out.println("rcell["+currentRow+","+currentColumn+"]=" + cell.toBitString(64));
 		return senseAmplifier.get(currentColumn);
 	}
 	

@@ -29,16 +29,11 @@ public final class Rank {
 	public Bits exec(ChannelEvent request) {
 		Bits bReceived = new Bits();
 		for (int i = 0; i < hashChip.size(); i++) {
-			ChannelEvent chipRequest = request.toBuilder().data(
-					request.getData().subbit(i*chipDataSize, chipDataSize)).build();
-			
-//			System.out.println("chip[" + i + "]=" + chipRequest.getData().toBitString(chipDataSize));
+			ChannelEvent chipRequest = request.toBuilder()
+					.data(request.getData().subbit(i*chipDataSize, chipDataSize)).build();
 			Bits r = hashChip.get(i).exec(chipRequest);
-//			System.out.println("line=" + r.toBitString(72));
 			bReceived.append(r);
-//			System.out.println("bReceive=" + bReceived.toBitString(64));
 		}
-//		System.out.println("xReceive=" + bReceived.toBitString(64));
 		return bReceived;
 	}
 

@@ -4,12 +4,14 @@ import java.util.HashMap;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import zerr.configuration.model.BankConfModel;
 import zerr.configuration.model.BankGroupConfModel;
 import zerr.util.Bits;
 
 @Builder
 @Data
+@Slf4j
 public final class BankGroup {
 	private HashMap<Integer, Bank> hashBank;
 	
@@ -28,8 +30,8 @@ public final class BankGroup {
 	public Bits exec(ChannelEvent request) {
 		int bank = request.getBank().toInt();
 		if(bank < 0 || bank >= hashBank.size()) {
-			System.err.println("FATAL: Wrong bank");
-			System.exit(-1);
+			log.error("FATAL: Wrong bank");
+			return null;
 		}
 		return hashBank.get(bank).exec(request.getControlSignal(),request.getAddress(),request.getData());
 	}

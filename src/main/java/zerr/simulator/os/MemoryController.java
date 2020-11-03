@@ -12,17 +12,7 @@ import zerr.util.Bits;
 public final class MemoryController {
 	private Controller controller;
 
-//	private static final ControlSignal[] WRITE_EVENT = { 
-//			ControlSignal.loadRow(), 
-//			ControlSignal.setSenseAmpColumn(),
-//			ControlSignal.writeCell() };
-//	
-//	private static final ControlSignal[] READ_EVENT = { 
-//			ControlSignal.loadRow(), 
-//			ControlSignal.loadColumn(),
-//			ControlSignal.dataOkToRead() };
-
-	public void writeEvent(Bits addressRow, Bits addressCol, Bits bank, Bits bankGroup, Bits rank, int mod, final Bits data) throws InterruptedException {
+	public void writeEvent(Bits addressRow, Bits addressCol, Bits bank, Bits bankGroup, Bits rank, int mod, final Bits data) {
 			controller.getHashModule().get(mod).sendCommand(ChannelEvent.builder()
 					.address(addressRow)
 					.bank(bank)
@@ -30,7 +20,7 @@ public final class MemoryController {
 					.rank(rank)
 					.data(data)
 					.controlSignal(ControlSignal.loadRow())
-					.build(), false);
+					.build());
 			
 			controller.getHashModule().get(mod).sendCommand(ChannelEvent.builder()
 					.address(addressCol)
@@ -39,16 +29,15 @@ public final class MemoryController {
 					.rank(rank)
 					.data(data)
 					.controlSignal(ControlSignal.setSenseAmpColumn())
-					.build(), false);
+					.build());
 			
 			controller.getHashModule().get(mod).sendCommand(ChannelEvent.builder()
-//					.address(new Bits())
 					.bank(bank)
 					.bankGroup(bankGroup)
 					.rank(rank)
 					.data(data)
 					.controlSignal(ControlSignal.writeCell())
-					.build(), false);
+					.build());
 	}
 
 	public static MemoryController create(Controller controller) {
@@ -58,12 +47,13 @@ public final class MemoryController {
 				.build();
 	}
 
-	public void shutdown() throws InterruptedException {
+	public void shutdown() {
 		for (int i = 0; i < controller.getHashModule().size(); i++)
 			controller.getHashModule().get(i).sendCommand(ChannelEvent.builder()
 					.rank(Bits.from(-1))
-					.build(), false);
+					.build());
 	}
+	
 	public Bits readEvent(Bits addressRow,Bits addressCol, Bits bank, Bits bankGroup, Bits rank, int mod) throws InterruptedException {
 			controller.getHashModule().get(mod).sendCommand(ChannelEvent.builder()
 					.address(addressRow)
@@ -72,7 +62,7 @@ public final class MemoryController {
 					.rank(rank)
 					.data(new Bits())
 					.controlSignal(ControlSignal.loadRow())
-					.build(), false);
+					.build());
 			
 			controller.getHashModule().get(mod).sendCommand(ChannelEvent.builder()
 					.address(addressCol)
@@ -81,16 +71,15 @@ public final class MemoryController {
 					.rank(rank)
 					.data(new Bits())
 					.controlSignal(ControlSignal.loadColumn())
-					.build(), false);
+					.build());
 			
-			return controller.getHashModule().get(mod).sendCommand(ChannelEvent.builder()
-//					.address(addressRow)
+			return controller.getHashModule().get(mod).sendCommandAndWait(ChannelEvent.builder()
 					.bank(bank)
 					.bankGroup(bankGroup)
 					.rank(rank)
 					.data(new Bits())
 					.controlSignal(ControlSignal.dataOkToRead())
-					.build(), true).getData();
+					.build()).getData();
 	}
 
 }
