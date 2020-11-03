@@ -3,13 +3,11 @@ package zerr.util;
 import java.util.BitSet;
 
 public class Bits extends BitSet {
-//	private int lenghtAllocated;
 	public Bits() {
 	}
 
 	public Bits(int size) {
 		super(size);
-//		lenghtAllocated = size;
 	}
 
 	public static Bits from(final byte msg) {
@@ -22,7 +20,6 @@ public class Bits extends BitSet {
 			b[i] = from(msgs[i]);
 		return b;
 	}
-	
 	
 	public static Bits[] from(final String s) {
 		return from(s.getBytes());
@@ -72,8 +69,4 @@ public class Bits extends BitSet {
 			value += this.get(i) ? "1" : "0";
 		return value;
 	}
-	
-//	public String toBitString() {
-//		return toBitString(lenghtAllocated); 
-//	}
 }

@@ -1,0 +1,32 @@
+{
+  "simulator" : { },
+  "hardware" : {
+    "controller" : {
+      "module" : {
+        "amount" : 1,
+        "name" : "oldestDDR",
+        "bufferSize" : 99,
+        "channel" : {
+          "dataSize" : 64
+        },
+        "rank" : {
+          "amount" : 2,
+          "chip" : {
+            "amount" : 8,
+            "bankGroup" : {
+              "amount" : 1,
+              "bank" : {
+                "amount" : 1,
+                "cell" : {
+                  "amount" : 8,
+                  "row" : 2,
+                  "columns" : 2
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

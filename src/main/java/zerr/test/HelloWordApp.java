@@ -34,9 +34,9 @@ public class HelloWordApp {
 		
 		
 		
-		os.write(Bits.from("PepaPig"), 20);
+		os.write(Bits.from("PepaPig"), 0);
 		
-		for(int i=20;i<27;i++) {
+		for(int i=0;i<7;i++) {
 			System.out.println("vMem["+i+"] "+(char)os.read(i).toInt());
 		}
 //		System.out.println((char)os.read(5).toInt());

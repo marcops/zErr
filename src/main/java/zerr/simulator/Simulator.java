@@ -10,7 +10,7 @@ public class Simulator {
 	private ZErrConfModel zErrConfiguration;
 
 	public void run() throws Exception {
-		zErrConfiguration = new ConfigurationService().load("128_MT9VDDT1672A.json");
+		zErrConfiguration = new ConfigurationService().load("test4bytes.json");
 		
 		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
 		System.out.println(hwd);
