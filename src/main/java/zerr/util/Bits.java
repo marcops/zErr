@@ -69,4 +69,8 @@ public class Bits extends BitSet {
 			value += this.get(i) ? "1" : "0";
 		return value;
 	}
+
+	public static Bits from(long r) {
+		return bitSet2Bits(BitSet.valueOf(new long[] { r }));
+	}
 }

@@ -31,16 +31,16 @@ public class HelloWordApp {
 //		System.out.println("vMem["+12+"] "+(char)os.read(12).toInt());
 //		System.out.println("vMem["+13+"] "+(char)os.read(13).toInt());
 //		System.out.println("vMem["+14+"] "+(char)os.read(14).toInt());
-		
-		
-		
-		os.write(Bits.from("PepaPig"), 0);
-		
-		for(int i=0;i<7;i++) {
-			System.out.println("vMem["+i+"] "+(char)os.read(i).toInt());
+
+		String msg = "Pepa";
+		os.write(Bits.from(msg), 0);
+
+		for (int i = 0; i < msg.length(); i++) {
+			System.out.println("vMem[" + i + "] " + (char) os.read(i).toInt());
 		}
-//		System.out.println((char)os.read(5).toInt());
 		
+		os.shutdown();
+//		System.out.println((char)os.read(5).toInt());
 
 	}
 

@@ -15,9 +15,10 @@ public class ModuleExecutor extends Thread {
 			try {
 				ChannelEvent request = module.getChannelBuffer().getIn().take();
 				int rank = request.getRank().toInt();
+				if (rank == -1) return;
 				if (rank < 0 || rank >= module.getAmount()) {
 					System.err.println("FATAL: Wrong rank");
-					System.exit(-1);
+					return;
 				}
 				Bits bits = module.getHashRank().get(rank).exec(request);
 				if (request.getControlSignal().isDataOkToRead()) {
@@ -27,7 +28,7 @@ public class ModuleExecutor extends Thread {
 			} catch (InterruptedException e) {
 				System.err.println(e);
 				System.err.println("FATAL: Wrong take");
-				System.exit(-1);
+				return;
 			}
 
 		}

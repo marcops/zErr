@@ -33,7 +33,7 @@ public class ControlSignal {
 	public static ControlSignal dataOkToRead() {
 		return ControlSignal.builder().ras(true).cas(false).we(true).build();
 	}
-
+	
 	public boolean isDataOkToRead() {
 		return ras && !cas && we;
 	}

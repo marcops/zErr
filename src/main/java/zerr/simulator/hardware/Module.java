@@ -30,6 +30,7 @@ public final class Module {
 				.amount(module.getAmount())
 				.dataSize(module.getChannel().getDataSize())
 				.build();
+		
 		mod.setExecutor(new ModuleExecutor(mod));
 		mod.getExecutor().start();
 		return mod;
@@ -40,4 +41,5 @@ public final class Module {
 		if(hasAnswer) return channelBuffer.getOut().take();
 		return e;
 	}
+	
 }

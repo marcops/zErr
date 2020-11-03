@@ -21,40 +21,34 @@ public class OperationalSystem {
 				.build();
 	}
 
-	//TODO fazer o controle da vmem
 	public void write(Bits[] msg, int vAddress) throws InterruptedException {
 		for (int i = 0; i < msg.length; i++) write(msg[i], vAddress + i);
 	}
 	
 	public void write(Bits msg, int vAddress) throws InterruptedException {
-		Bits address = Bits.from(vAddress);
+		
 		long mod = virtualAddress.getModule(vAddress);
-		System.out.println("module=" + mod);
 		long ra = virtualAddress.getRank(vAddress);
-		System.out.println("rank=" + ra);
 		long bg = virtualAddress.getBankGroup(vAddress);
-		System.out.println("bg=" + bg);
 		long b = virtualAddress.getBank(vAddress);
-		System.out.println("b=" + b);
 		long r = virtualAddress.getRow(vAddress);
-		System.out.println("r=" + r);
 		long c = virtualAddress.getColumn(vAddress);
-		System.out.println("c=" + c);
-//		System.out.println("vAddress["+vAddress+"]="+address.toBitString(64));
-		//TODO bank,rank
-		Bits bank = Bits.from(0);
-		Bits bankGroup = Bits.from(0);
-		Bits rank = Bits.from(0);
-		memoryDriver.writeEvent(address, address, bank, bankGroup, rank, 0, msg);
+		System.out.println("vAddress [" + vAddress + "] " + ", c=" + c + ", r=" + r + ", b=" + b + ", bg=" + bg  + ", rank=" + ra + ", module=" + mod);
+		memoryDriver.writeEvent(Bits.from(r), Bits.from(c), Bits.from(b), Bits.from(bg), Bits.from(ra), (int)mod, msg);
 	}
 
 	public Bits read(int vAddress) throws InterruptedException {
-		Bits addressTest = Bits.from(vAddress);
-		//TODO bank,rank
-		Bits bank = Bits.from(0); 
-		Bits bankGroup = Bits.from(0);
-		Bits rank = Bits.from(0);
-		return memoryDriver.readEvent(addressTest, addressTest, bank, bankGroup, rank, 0);
+		long mod = virtualAddress.getModule(vAddress);
+		long ra = virtualAddress.getRank(vAddress);
+		long bg = virtualAddress.getBankGroup(vAddress);
+		long b = virtualAddress.getBank(vAddress);
+		long r = virtualAddress.getRow(vAddress);
+		long c = virtualAddress.getColumn(vAddress);
+		return memoryDriver.readEvent(Bits.from(r), Bits.from(c), Bits.from(b), Bits.from(bg), Bits.from(ra), (int)mod);
+	}
+
+	public void shutdown() throws InterruptedException {
+		 memoryDriver.shutdown();		
 	}
 
 }

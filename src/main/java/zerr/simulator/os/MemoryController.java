@@ -58,6 +58,12 @@ public final class MemoryController {
 				.build();
 	}
 
+	public void shutdown() throws InterruptedException {
+		for (int i = 0; i < controller.getHashModule().size(); i++)
+			controller.getHashModule().get(i).sendCommand(ChannelEvent.builder()
+					.rank(Bits.from(-1))
+					.build(), false);
+	}
 	public Bits readEvent(Bits addressRow,Bits addressCol, Bits bank, Bits bankGroup, Bits rank, int mod) throws InterruptedException {
 			controller.getHashModule().get(mod).sendCommand(ChannelEvent.builder()
 					.address(addressRow)
