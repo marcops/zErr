@@ -3,6 +3,7 @@ package zerr.simulator.os;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import zerr.simulator.hardware.Cell;
 import zerr.simulator.hardware.Hardware;
 import zerr.util.Bits;
 
@@ -52,6 +53,25 @@ public class OperationalSystem {
 
 	public void shutdown() {
 		 memoryDriver.shutdown();		
+	}
+
+	public void invertBit(int vAddress, int bitPosition) {
+		long mod = virtualAddress.getModule(vAddress);
+		long ra = virtualAddress.getRank(vAddress);
+		long bg = virtualAddress.getBankGroup(vAddress);
+		long b = virtualAddress.getBank(vAddress);
+		long r = virtualAddress.getRow(vAddress);
+		long c = virtualAddress.getColumn(vAddress);
+		
+		Cell cell = hardware.getController()
+			.getHashModule().get((int)mod)
+			.getHashRank().get((int)ra)
+			.getHashChip().get((int)c)
+			.getHashBankGroup().get((int)bg)
+			.getHashBank().get((int)b)
+			.getHashCell().get(bitPosition);
+		int pos =  (int)(r*c);
+		cell.getIcell().set(pos, !cell.getIcell().get(pos));
 	}
 
 }

@@ -16,6 +16,7 @@ public class HelloWordApp {
 		String msg = "Pepa";
 		os.write(Bits.from(msg), 0);
 
+		os.invertBit(0, 3);
 		for (int i = 0; i < msg.length(); i++) {
 			log.info("vMem[" + i + "] " + (char) os.read(i).toInt());
 		}
