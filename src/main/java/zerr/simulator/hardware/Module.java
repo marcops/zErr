@@ -13,21 +13,18 @@ public final class Module {
 	private HashMap<Integer, Rank> hashRank;
 	private Integer amount;
 	private ChannelBuffer channelBuffer;
-	private Integer dataSize;
 	private ModuleExecutor executor;
 	
 	public static Module create(ModuleConfModel module) {
 		//Every chip receive dataSize/chipAmount
 		HashMap<Integer, Rank> hash = new HashMap<>();
 		for (int j = 0; j < module.getRank().getAmount(); j++)
-			hash.put(j, Rank.create(module.getRank(), 
-					module.getChannel().getDataSize() / module.getRank().getChip().getAmount()));
+			hash.put(j, Rank.create(module.getRank()));
 		
 		Module mod = Module.builder()
 				.hashRank(hash)
 				.channelBuffer(ChannelBuffer.create(module.getBufferSize()))
 				.amount(module.getAmount())
-				.dataSize(module.getChannel().getDataSize())
 				.build();
 		
 		mod.setExecutor(new ModuleExecutor(mod));

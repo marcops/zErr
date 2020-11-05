@@ -3,15 +3,25 @@ package zerr.util;
 import java.util.BitSet;
 
 public class Bits extends BitSet {
+	public static final int ONE_BYTE = 8; 
+	private int length;
+
+	@Override
+	public int length() {
+		return length;
+	}
+	
 	public Bits() {
+		length = 0;
 	}
 
 	public Bits(int size) {
 		super(size);
+		length = size;
 	}
 
 	public static Bits from(final byte msg) {
-		return bitSet2Bits(BitSet.valueOf(new byte[] { msg }));
+		return bitSet2Bits(BitSet.valueOf(new byte[] { msg }), 64);
 	}
 	
 	public static Bits[] from(final byte[] msgs) {
@@ -25,22 +35,12 @@ public class Bits extends BitSet {
 		return from(s.getBytes());
 	}
 	
-//	public static Bits fromBitArray(final String s) {
-//		return bitSet2Bits(BitSet.valueOf(new long[] { Long.parseLong(s, 2) }));
-//	}
-
-	private static Bits bitSet2Bits(BitSet bs) {
-		Bits b = new Bits(bs.length());
-		for (int i = 0; i < bs.length(); i++) b.set(i, bs.get(i));
+	private static Bits bitSet2Bits(BitSet bs, int length) {
+		Bits b = new Bits(length);
+		for (int i = 0; i < length; i++) b.set(i, bs.get(i));
 		return b;
 	}
 
-//	public static Bits from(int num) {
-//		String bits = Integer.toBinaryString(num);
-//		Bits bitSet = new Bits(bits.length());
-//		for (int i = 0; i < bits.length(); i++) bitSet.set(i, bits.charAt((bits.length()-1)-i) == '1');
-//		return bitSet;
-//	}
 
 	public int toInt() {
 		if (this.toLongArray().length == 0) return 0;
@@ -60,13 +60,14 @@ public class Bits extends BitSet {
 	}
 
 	public void append(Bits bits) {
-		int baseLenght = this.length(); 
+		int baseLenght = length; 
 		for (int i = 0; i < bits.length(); i++) {
 			this.set(baseLenght + i, bits.get(i));
+			length++;
 		}
 	}
 	
-	public String toBitString(int length) {
+	public String toBitString() {
 		String value = "";
 		for (int i = 0; i < length; i++) 
 			value += this.get(i) ? "1" : "0";
@@ -74,6 +75,21 @@ public class Bits extends BitSet {
 	}
 
 	public static Bits from(long r) {
-		return bitSet2Bits(BitSet.valueOf(new long[] { r }));
+		return bitSet2Bits(BitSet.valueOf(new long[] { r }), 64);
+	}
+
+	public int[] toIntArray() {
+		int []value = new int[length] ;
+		for (int i = 0; i < length; i++) 
+			value[i] = this.get(i) ? 1 : 0;
+		return value;
+		
+	}
+
+	public static Bits from(int[] msgs) {
+		Bits b = new Bits(msgs.length);
+		for(int i = 0; i< msgs.length;i++)
+			b.set(i, msgs[i] == 1);
+		return b;
 	}
 }

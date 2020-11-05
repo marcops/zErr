@@ -11,14 +11,14 @@ import zerr.util.Bits;
 @Slf4j
 public class OperationalSystem {
 	private Hardware hardware;
-	private MemoryController memoryDriver;
+	private MemoryControllerDriver memoryDriver;
 	private Integer memorySize;
 	private VirtualAddress virtualAddress;
 	
 	public static OperationalSystem create(Hardware hwd) {
 		return OperationalSystem.builder()
 				.hardware(hwd)
-				.memoryDriver(MemoryController.create(hwd.getController()))
+				.memoryDriver(MemoryControllerDriver.create(hwd.getController()))
 				.virtualAddress(VirtualAddress.create(hwd))
 				.build();
 	}
@@ -35,7 +35,7 @@ public class OperationalSystem {
 		long r = virtualAddress.getRow(vAddress);
 		long c = virtualAddress.getColumn(vAddress);
 		log.info("W-vAddress [" + vAddress + "]" + ", c=" + c + ", r=" + r + ", b=" + b + ", bg=" + bg  + ", rank=" + ra + ", module=" + mod + ", data=" + msg.toLong());
-		memoryDriver.writeEvent(Bits.from(r), Bits.from(c), Bits.from(b), Bits.from(bg), Bits.from(ra), (int)mod, msg);
+		memoryDriver.writeEvent(Bits.from(r), Bits.from(c), Bits.from(b), Bits.from(bg), Bits.from(ra), Bits.from(mod), msg);
 	}
 
 	public Bits read(int vAddress) throws InterruptedException {
@@ -45,7 +45,7 @@ public class OperationalSystem {
 		long b = virtualAddress.getBank(vAddress);
 		long r = virtualAddress.getRow(vAddress);
 		long c = virtualAddress.getColumn(vAddress);
-		Bits msg = memoryDriver.readEvent(Bits.from(r), Bits.from(c), Bits.from(b), Bits.from(bg), Bits.from(ra), (int)mod);
+		Bits msg = memoryDriver.readEvent(Bits.from(r), Bits.from(c), Bits.from(b), Bits.from(bg), Bits.from(ra), Bits.from(mod));
 		log.info("R-vAddress [" + vAddress + "]" + ", c=" + c + ", r=" + r + ", b=" + b + ", bg=" + bg  + ", rank=" + ra + ", module=" + mod + ", data=" + msg.toLong());
 		return msg;
 	}

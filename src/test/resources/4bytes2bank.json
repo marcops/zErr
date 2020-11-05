@@ -2,13 +2,11 @@
   "simulator" : { },
   "hardware" : {
     "controller" : {
+      "type" : "NONE",
       "module" : {
         "amount" : 1,
         "name" : "oldestDDR",
         "bufferSize" : 99,
-        "channel" : {
-          "dataSize" : 64
-        },
         "rank" : {
           "amount" : 1,
           "chip" : {
@@ -18,7 +16,6 @@
               "bank" : {
                 "amount" : 2,
                 "cell" : {
-                  "amount" : 8,
                   "row" : 2,
                   "columns" : 2
                 }

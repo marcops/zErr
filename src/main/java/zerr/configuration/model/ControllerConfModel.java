@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import zerr.simulator.hardware.EccType;
 
 @Data
 @Builder
@@ -14,4 +15,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ControllerConfModel {
 	private ModuleConfModel module;
+	private EccType type;
 }

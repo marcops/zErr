@@ -13,6 +13,7 @@ public class ChannelEvent {
 	private Bits rank;
 	private Bits bankGroup;
 	private Bits bank;
+	private Bits module;
 
 	private ControlSignal controlSignal;
 

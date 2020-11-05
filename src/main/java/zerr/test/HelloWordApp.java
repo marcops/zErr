@@ -22,7 +22,7 @@ public class HelloWordApp {
 
 		os.write(Bits.from(-1), 0);
 		log.info("vMem[" + 0 + "] " + os.read(0).toInt());
-		
+
 		os.write(Bits.from(Long.MAX_VALUE), 0);
 		log.info("vMem[" + 0 + "] " + os.read(0).toLong());
 

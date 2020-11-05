@@ -14,7 +14,7 @@ public final class Bank {
 	
 	public static Bank create(BankConfModel bank) {
 		HashMap<Integer, Cell> hash = new HashMap<>();
-		for (int i = 0; i < bank.getCell().getAmount(); i++)
+		for (int i = 0; i < Bits.ONE_BYTE; i++)
 			hash.put(i, Cell.create(bank.getCell()));
 		
 		return Bank.builder()

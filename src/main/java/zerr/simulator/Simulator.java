@@ -12,7 +12,7 @@ public final class Simulator {
 	private Simulator() {}
 	
 	public static void run() throws Exception {
-		ZErrConfModel zErrConfiguration = new ConfigurationService().load("4bytes.json");
+		ZErrConfModel zErrConfiguration = new ConfigurationService().load("4bytesECC.json");
 		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
 		log.info(hwd.toString());
 

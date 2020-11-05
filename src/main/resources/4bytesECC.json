@@ -2,7 +2,7 @@
   "simulator" : { },
   "hardware" : {
     "controller" : {
-      "type" : "NONE",
+      "type" : "HAMMING_SECDEC",
       "module" : {
         "amount" : 1,
         "name" : "oldestDDR",
@@ -10,9 +10,9 @@
         "rank" : {
           "amount" : 1,
           "chip" : {
-            "amount" : 8,
+            "amount" : 9,
             "bankGroup" : {
-              "amount" : 2,
+              "amount" : 1,
               "bank" : {
                 "amount" : 1,
                 "cell" : {

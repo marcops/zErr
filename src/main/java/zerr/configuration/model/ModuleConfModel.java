@@ -16,6 +16,5 @@ public class ModuleConfModel {
 	private String name;
 	private Integer amount;
 	private RankConfModel rank;
-	private ChannelConfModel channel;
 	private Integer bufferSize;
 }
