@@ -8,7 +8,7 @@ import zerr.simulator.hardware.memory.Module;
 import zerr.simulator.hardware.memory.Rank;
 
 @Builder
-public class VirtualAddress {
+public class Address {
 	private long rowSize;
 	private long columnSize;
 	private long bankSize;
@@ -18,7 +18,7 @@ public class VirtualAddress {
 	private long maxAddress;
 	private ChannelMode mode;
 
-	public static VirtualAddress create(Controller controller) {
+	public static Address create(Controller controller) {
 		Module mod = controller.getHashModule().get(0);
 		int rank = mod.getHashRank().size();
 		Rank r = mod.getHashRank().get(0);
@@ -39,7 +39,7 @@ public class VirtualAddress {
 		long rankSize = bankGroupSize * rank;
 
 		long maxAddress = rankSize * mod.getAmount();
-		return VirtualAddress.builder()
+		return Address.builder()
 				.rowSize(row)
 				.columnSize(column)
 				.cellSize(cellSize)

@@ -19,7 +19,7 @@ public final class Controller {
 	private HashMap<Integer, Module> hashModule;
 	private EccType eccType;
 	private ChannelMode channelMode;
-	private VirtualAddress virtualAddress;
+	private Address virtualAddress;
 	
 	public static Controller create(ControllerConfModel controller) {
 		HashMap<Integer, Module> hash = new HashMap<>();
@@ -31,7 +31,7 @@ public final class Controller {
 				.eccType(controller.getEccType())
 				.channelMode(controller.getChannelMode())
 				.build();
-		c.setVirtualAddress(VirtualAddress.create(c));
+		c.setVirtualAddress(Address.create(c));
 		return c;
 	}
 
