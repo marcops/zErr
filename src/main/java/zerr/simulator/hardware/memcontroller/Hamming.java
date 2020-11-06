@@ -1,4 +1,4 @@
-package zerr.simulator.hardware;
+package zerr.simulator.hardware.memcontroller;
 
 import zerr.util.Bits;
 
@@ -8,8 +8,6 @@ public class Hamming {
 		for (int i = 0; i < created.length - 1; i++) {
 			v ^= created[i];
 		}
-//		System.out.println("par=" + v);
-//		System.out.println(created);
 		return v;
 	}
 
@@ -107,12 +105,11 @@ public class Hamming {
 
 		int error_location = Integer.parseInt(errorLocation, 2);
 		if (error_location != 0) {
-			// fix error
 			generatedCode[error_location - 1] = (generatedCode[error_location - 1] + 1) % 2;
-			System.out.println("fix at =" + (error_location - 1));
+//			System.out.println("fix at =" + (error_location - 1));
 			if (generatedCode[generatedCode.length - 1] != calcParity(generatedCode)) {
-				System.out.println("Double Error");
-				System.out.println(generatedCode[generatedCode.length - 1] + " - " + calcParity(generatedCode));
+//				System.out.println("Double Error");
+//				System.out.println(generatedCode[generatedCode.length - 1] + " - " + calcParity(generatedCode));
 				return null;
 			}
 		} else {

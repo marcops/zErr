@@ -1,4 +1,4 @@
-package zerr.simulator.hardware;
+package zerr.simulator.hardware.memory;
 
 import java.util.HashMap;
 

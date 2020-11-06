@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import zerr.simulator.Util;
+import zerr.simulator.hardware.memcontroller.VirtualAddress;
 
 class VirtualAddressTest {
 

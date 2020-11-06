@@ -2,7 +2,7 @@
   "simulator" : { },
   "hardware" : {
     "controller" : {
-      "type" : "NONE",
+      "eccType" : "NONE",
       "module" : {
         "amount" : 1,
         "name" : "oldestDDR",

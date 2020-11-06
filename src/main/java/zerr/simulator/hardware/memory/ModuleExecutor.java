@@ -1,4 +1,4 @@
-package zerr.simulator.hardware;
+package zerr.simulator.hardware.memory;
 
 import lombok.extern.slf4j.Slf4j;
 import zerr.util.Bits;

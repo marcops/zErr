@@ -2,17 +2,18 @@
   "simulator" : { },
   "hardware" : {
     "controller" : {
-      "eccType" : "NONE",
+      "channelMode" : "DUAL_CHANNEL",
+      "eccType" : "HAMMING_SECDEC",
       "module" : {
-        "amount" : 1,
+        "amount" : 2,
         "name" : "oldestDDR",
         "bufferSize" : 99,
         "rank" : {
           "amount" : 1,
           "chip" : {
-            "amount" : 8,
+            "amount" : 9,
             "bankGroup" : {
-              "amount" : 2,
+              "amount" : 1,
               "bank" : {
                 "amount" : 1,
                 "cell" : {

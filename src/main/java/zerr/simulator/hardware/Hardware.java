@@ -3,6 +3,7 @@ package zerr.simulator.hardware;
 import lombok.Builder;
 import lombok.Data;
 import zerr.configuration.model.HardwareConfModel;
+import zerr.simulator.hardware.memcontroller.Controller;
 
 @Data
 @Builder

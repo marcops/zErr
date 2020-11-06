@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
-import zerr.simulator.hardware.Hamming;
+import zerr.simulator.hardware.memcontroller.Hamming;
 import zerr.util.Bits;
 
 public class HammingTest {

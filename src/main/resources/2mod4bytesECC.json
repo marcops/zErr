@@ -2,25 +2,22 @@
   "simulator" : { },
   "hardware" : {
     "controller" : {
+      "eccType" : "HAMMING_SECDEC",
       "module" : {
-        "amount" : 1,
+        "amount" : 2,
         "name" : "oldestDDR",
         "bufferSize" : 99,
-        "channel" : {
-          "dataSize" : 64
-        },
         "rank" : {
           "amount" : 1,
           "chip" : {
-            "amount" : 8,
+            "amount" : 9,
             "bankGroup" : {
               "amount" : 1,
               "bank" : {
-                "amount" : 4,
+                "amount" : 1,
                 "cell" : {
-                  "amount" : 8,
-                  "row" : 4000,
-                  "columns" : 1000
+                  "row" : 2,
+                  "columns" : 2
                 }
               }
             }

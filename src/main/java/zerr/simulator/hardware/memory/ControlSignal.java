@@ -1,4 +1,4 @@
-package zerr.simulator.hardware;
+package zerr.simulator.hardware.memory;
 
 import lombok.Builder;
 import lombok.Data;

@@ -2,7 +2,7 @@
   "simulator" : { },
   "hardware" : {
     "controller" : {
-      "type" : "HAMMING_SECDEC",
+      "eccType" : "HAMMING_SECDEC",
       "module" : {
         "amount" : 1,
         "name" : "oldestDDR",
