@@ -15,7 +15,7 @@ class VirtualAddressTest {
 
 	@Test
 	void validate4Bytes() throws Exception {
-		VirtualAddress vAddress = VirtualAddress.create(Util.loadConfig("4bytes.json"));
+		VirtualAddress vAddress = VirtualAddress.create(Util.loadConfig("4bytes.json").getController());
 
 		long address = 0;
 		assertEquals(0L, vAddress.getModule(address));
@@ -53,7 +53,7 @@ class VirtualAddressTest {
 
 	@Test
 	void exceed4Bytes() throws Exception {
-		VirtualAddress vAddress = VirtualAddress.create(Util.loadConfig("4bytes.json"));
+		VirtualAddress vAddress = VirtualAddress.create(Util.loadConfig("4bytes.json").getController());
 
 		long address = 4;
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -63,7 +63,7 @@ class VirtualAddressTest {
 
 	@Test
 	void testBank() throws Exception {
-		VirtualAddress vAddress = VirtualAddress.create(Util.loadConfig("4bytes2bank.json"));
+		VirtualAddress vAddress = VirtualAddress.create(Util.loadConfig("4bytes2bank.json").getController());
 
 		long address = 4;
 		assertEquals(0L, vAddress.getModule(address));
@@ -76,7 +76,7 @@ class VirtualAddressTest {
 
 	@Test
 	void testGroupBank() throws Exception {
-		VirtualAddress vAddress = VirtualAddress.create(Util.loadConfig("4bytes2Groupbank.json"));
+		VirtualAddress vAddress = VirtualAddress.create(Util.loadConfig("4bytes2Groupbank.json").getController());
 
 		long address = 4;
 		assertEquals(0L, vAddress.getModule(address));
@@ -89,7 +89,7 @@ class VirtualAddressTest {
 
 	@Test
 	void testRank() throws Exception {
-		VirtualAddress vAddress = VirtualAddress.create(Util.loadConfig("4bytes2Rank.json"));
+		VirtualAddress vAddress = VirtualAddress.create(Util.loadConfig("4bytes2Rank.json").getController());
 
 		long address = 4;
 		assertEquals(0L, vAddress.getModule(address));

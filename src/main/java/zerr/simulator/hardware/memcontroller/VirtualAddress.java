@@ -101,10 +101,10 @@ public class VirtualAddress {
 	}
 	
 	private long getSingleBankGroup(long vAddress) {
-		long bank = vAddress 
+		long bankGroup = vAddress 
 				- (getSingleRank(vAddress) * bankGroupSize)
 				- (getModule(vAddress) * rankSize);
-		return bank / cellSize;
+		return bankGroup / bankSize;
 	}
 	
 	private long getSingleBank(long vAddress) {
