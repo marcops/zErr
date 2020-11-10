@@ -1,5 +1,8 @@
 package zerr.simulator.hardware.memcontroller.ecc;
 
+import zerr.exception.HardErrorException;
+import zerr.util.Bits;
+
 public class CRC8 {
 	private static final int POLY = 0x0D5;
 
@@ -30,6 +33,20 @@ public class CRC8 {
 
 	public static byte encode(final int b) {
 		return encode((byte) b, 0);
+	}
+
+	public static Bits encode(Bits input) {
+		byte br = CRC8.encode(input.toByteArray());
+		input.append(Bits.from(br));
+		return input;
+	}
+
+	public static Bits decode(Bits input) throws HardErrorException {
+		byte[] loaded = input.toByteArray();
+		byte crc = CRC8.encode(loaded, 0, 8);
+		//TODO Remover last bit?
+		if (loaded[8] == crc) return input;
+		throw new HardErrorException(input);
 	}
 
 }

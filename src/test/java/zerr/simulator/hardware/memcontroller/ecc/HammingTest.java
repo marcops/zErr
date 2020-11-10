@@ -2,52 +2,57 @@ package zerr.simulator.hardware.memcontroller.ecc;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import zerr.exception.HardErrorException;
+import zerr.exception.SoftErrorException;
 import zerr.util.Bits;
 
 public class HammingTest {
 	@Test
-	void validateHamming() {
-		int[] originalBits = { 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
+	void validateHamming() throws HardErrorException, SoftErrorException {
+		int[] bits = { 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
 				1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0 };
-		int[] created = Hamming.encode(originalBits);
+		Bits originalBits = Bits.from(bits);
+		Bits created = Hamming.encode(originalBits);
 
-		int[] received = Hamming.decode(created);
+		Bits received = Hamming.decode(created);
 
 		System.out.println(received);
-		assertArrayEquals(originalBits, received);
+		assertArrayEquals(originalBits.toIntArray(), received.toIntArray());
 	}
 
 	@Test
-	void validateHammingWithError() {
-		int[] originalBits = { 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
+	void validateHammingWithSoftError() {
+		int[] bits = { 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
 				1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0 };
-		int[] created = Hamming.encode(originalBits);
-		System.out.println(created.length);
-		created[3] = created[3] == 1 ? 0 : 1;
-		int[] received = Hamming.decode(created);
+		
+		Bits originalBits = Bits.from(bits); 
+		Bits created = Hamming.encode(originalBits);
+		created.set(3, !created.get(3));
+		Assertions.assertThrows(SoftErrorException.class, () -> {
+			Hamming.decode(created);
+		});
 
-		System.out.println(received);
-		assertArrayEquals(originalBits, received);
 	}
 
 	@Test
 	void validateHammingWith2Error() {
-		int[] originalBits = { 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
+		int[] bits = { 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
 				1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0 };
-		int[] created = Hamming.encode(originalBits);
-		System.out.println(created.length);
-		created[3] = created[3] == 1 ? 0 : 1;
-		created[6] = created[6] == 1 ? 0 : 1;
-		int[] received = Hamming.decode(created);
-		assertNull(received);
+		Bits originalBits = Bits.from(bits); 
+		Bits created = Hamming.encode(originalBits);
+		created.set(3, !created.get(3));
+		created.set(6, !created.get(6));
+		Assertions.assertThrows(HardErrorException.class, () -> {
+			Hamming.decode(created);
+		});
 	}
 
 	@Test
-	void validateHammingBits() {
+	void validateHammingBits() throws HardErrorException, SoftErrorException {
 		Bits originalBits = Bits.from(Long.MAX_VALUE);
 		Bits created = Hamming.encode(originalBits);
 
@@ -58,7 +63,7 @@ public class HammingTest {
 	
 	
 	@Test
-	void validateHammingBitsP() {
+	void validateHammingBitsP() throws HardErrorException, SoftErrorException {
 		String p = "P";
 		Bits originalBits = Bits.from(p)[0];
 		Bits created = Hamming.encode(originalBits);
@@ -73,9 +78,10 @@ public class HammingTest {
 		Bits originalBits = Bits.from(Long.MAX_VALUE);
 		Bits created = Hamming.encode(originalBits);
 		created.set(3, !created.get(3));
-		Bits received = Hamming.decode(created);
+		Assertions.assertThrows(SoftErrorException.class, () -> {
+			Hamming.decode(created);
+		});
 
-		assertEquals(originalBits.toLong(), received.toLong());
 	}
 
 	@Test
@@ -84,9 +90,10 @@ public class HammingTest {
 		Bits created = Hamming.encode(originalBits);
 		created.set(3, !created.get(3));
 		created.set(6, !created.get(6));
-		Bits received = Hamming.decode(created);
+		Assertions.assertThrows(HardErrorException.class, () -> {
+			Hamming.decode(created);
+		});
 
-		assertEquals(0L, received.toLong());
 	}
 
 }

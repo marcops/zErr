@@ -22,6 +22,8 @@ public final class Simulator {
 		hl.exec();
 		
 		os.shutdown();
+		
+		log.info(Report.getInstance().getReport());
 	}
 
 }

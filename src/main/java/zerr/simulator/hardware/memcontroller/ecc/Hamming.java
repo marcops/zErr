@@ -1,5 +1,7 @@
 package zerr.simulator.hardware.memcontroller.ecc;
 
+import zerr.exception.HardErrorException;
+import zerr.exception.SoftErrorException;
 import zerr.util.Bits;
 
 public class Hamming {
@@ -77,7 +79,9 @@ public class Hamming {
 		return parity;
 	}
 
-	public static int[] decode(int[] generatedCode) {
+	public static Bits decode(Bits data) throws HardErrorException, SoftErrorException {
+		int []generatedCode = data.toIntArray();
+		boolean soft = false;
 		int parityCount = 7;
 		int power;
 		int parity[] = new int[parityCount];
@@ -109,11 +113,11 @@ public class Hamming {
 			if (generatedCode[generatedCode.length - 1] != calcParity(generatedCode)) {
 //				System.out.println("Double Error");
 //				System.out.println(generatedCode[generatedCode.length - 1] + " - " + calcParity(generatedCode));
-				return null;
+				throw new HardErrorException(data);
 			}
-		} else {
-			// no error
-		}
+			soft = true;
+//			throw new SoftError();
+		} 
 
 		power = parityCount - 1;
 		String original = "";
@@ -127,23 +131,16 @@ public class Hamming {
 		int re[] = new int[original.length()];
 		for (int i = 0; i < original.length(); i++)
 			re[original.length() - i - 1] = original.charAt(i) == '1' ? 1 : 0;
-		return re;
+		Bits b = Bits.from(re);
+		if(soft) throw new SoftErrorException(data , b);
+		return b;
 	}
 
 	public static Bits encode(Bits signal) {
 		int[] a = signal.toIntArray();
-		int[] r = encode(a);
-		Bits b = Bits.from(r);
-		return b;
+		return Bits.from(encode(a));
 
 	}
 
-	public static Bits decode(Bits data) {
-		int[] a = data.toIntArray();
-		int[] r = decode(a);
-		if (r == null)
-			return new Bits();
-		return Bits.from(r);
-	}
 
 }
