@@ -21,7 +21,13 @@ public class OperationalSystem {
 	public void write(Bits[] msg, int vAddress) {
 		for (int i = 0; i < msg.length; i++) write(msg[i], vAddress + i);
 	}
+	//TEST PROPOSE ONLY
 	public void writeAndSync(Bits[] msg, int vAddress) throws InterruptedException {
+		write(msg, vAddress);
+		hardware.getController().waitSync();
+	}
+	//TEST PROPOSE ONLY
+	public void writeAndSync(Bits msg, int vAddress) throws InterruptedException {
 		write(msg, vAddress);
 		hardware.getController().waitSync();
 	}

@@ -22,6 +22,7 @@ public final class Controller {
 	private VirtualAddressService virtualAddress;
 	private ControllerECC controllerEcc;
 	
+	//TEST PROPOSE ONLY
 	public void waitSync() throws InterruptedException {
 		boolean finished = false;
 		while (!finished) {
