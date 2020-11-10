@@ -21,6 +21,11 @@ public class OperationalSystem {
 	public void write(Bits[] msg, int vAddress) {
 		for (int i = 0; i < msg.length; i++) write(msg[i], vAddress + i);
 	}
+	public void writeAndSync(Bits[] msg, int vAddress) throws InterruptedException {
+		write(msg, vAddress);
+		hardware.getController().waitSync();
+	}
+
 
 	public void write(Bits bits, int vAddress) {
 		hardware.getController().write(bits, vAddress);
@@ -37,7 +42,5 @@ public class OperationalSystem {
 	public void shutdown() {
 		hardware.getController().shutdown();
 	}
-	
-	
 
 }

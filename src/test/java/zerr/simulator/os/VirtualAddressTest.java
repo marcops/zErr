@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import zerr.simulator.Util;
-import zerr.simulator.hardware.memcontroller.Address;
+import zerr.simulator.hardware.memcontroller.VirtualAddressService;
 
 class VirtualAddressTest {
 
 	@Test
 	void validate4Bytes() throws Exception {
-		Address vAddress = Address.create(Util.loadConfig("4bytes.json").getController());
+		VirtualAddressService vAddress = VirtualAddressService.create(Util.loadConfig("4bytes.json").getController());
 
 		long address = 0;
 		assertEquals(0L, vAddress.getModule(address));
@@ -53,7 +53,7 @@ class VirtualAddressTest {
 
 	@Test
 	void exceed4Bytes() throws Exception {
-		Address vAddress = Address.create(Util.loadConfig("4bytes.json").getController());
+		VirtualAddressService vAddress = VirtualAddressService.create(Util.loadConfig("4bytes.json").getController());
 
 		long address = 4;
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -63,7 +63,7 @@ class VirtualAddressTest {
 
 	@Test
 	void testBank() throws Exception {
-		Address vAddress = Address.create(Util.loadConfig("4bytes2bank.json").getController());
+		VirtualAddressService vAddress = VirtualAddressService.create(Util.loadConfig("4bytes2bank.json").getController());
 
 		long address = 4;
 		assertEquals(0L, vAddress.getModule(address));
@@ -76,7 +76,7 @@ class VirtualAddressTest {
 
 	@Test
 	void testGroupBank() throws Exception {
-		Address vAddress = Address.create(Util.loadConfig("4bytes2Groupbank.json").getController());
+		VirtualAddressService vAddress = VirtualAddressService.create(Util.loadConfig("4bytes2Groupbank.json").getController());
 
 		long address = 4;
 		assertEquals(0L, vAddress.getModule(address));
@@ -89,7 +89,7 @@ class VirtualAddressTest {
 
 	@Test
 	void testRank() throws Exception {
-		Address vAddress = Address.create(Util.loadConfig("4bytes2Rank.json").getController());
+		VirtualAddressService vAddress = VirtualAddressService.create(Util.loadConfig("4bytes2Rank.json").getController());
 
 		long address = 4;
 		assertEquals(0L, vAddress.getModule(address));

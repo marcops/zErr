@@ -10,7 +10,7 @@ import zerr.exception.HardErrorException;
 import zerr.exception.SoftErrorException;
 import zerr.util.Bits;
 
-public class HammingTest {
+class HammingTest {
 	@Test
 	void validateHamming() throws HardErrorException, SoftErrorException {
 		int[] bits = { 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0,

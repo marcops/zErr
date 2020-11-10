@@ -13,11 +13,11 @@ public class HelloWordApp {
 	}
 
 	public void exec() throws InterruptedException {
-		//escreve uma palavra para testar o dual-channel
+//		//escreve uma palavra para testar o dual-channel
 		String msg = "Pepa";
 		os.write(Bits.from(msg), 3);
 		//inverte 1 bit dele para ver a correção
-		os.invertBit(0, 3);
+		os.invertBit(3, 0);
 		for (int i = 3; i < 3+ msg.length(); i++) {
 			log.info("vMem[" + i + "] " + (char) os.read(i).toInt());
 		}
@@ -32,7 +32,7 @@ public class HelloWordApp {
 		
 		//testa invertendo dois bits da palavra pepa para ver o que acontece..
 		os.write(Bits.from(msg), 0);
-		os.invertBit(0, 3);
+		os.invertBit(2, 5);
 		os.invertBit(0, 5);
 		for (int i = 0; i < msg.length(); i++) {
 			log.info("vMem[" + i + "] " + (char) os.read(i).toInt());

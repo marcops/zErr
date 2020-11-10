@@ -31,7 +31,6 @@ public class ModuleExecutor extends Thread {
 				log.error("FATAL: Wrong take", e);
 				return;
 			}
-
 		}
 	}
 }

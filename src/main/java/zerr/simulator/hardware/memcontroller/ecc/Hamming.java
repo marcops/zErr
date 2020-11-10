@@ -46,7 +46,8 @@ public class Hamming {
 	}
 
 	private static void allocateBits(int[] code, int[] signal) {
-		int j = 0, k = 0;
+		int j = 0;
+		int k = 0;
 		for (int i = 1; i <= code.length - 1; i++) {
 			if (Math.pow(2, j) == i) {
 				code[i - 1] = 2;
@@ -69,10 +70,8 @@ public class Hamming {
 
 				int x = ((Integer.parseInt(s)) / ((int) Math.pow(10, power))) % 10;
 
-				if (x == 1) {
-					if (bits[i] == 1) {
-						parity = (parity + 1) % 2;
-					}
+				if (x == 1 && bits[i] == 1) {
+					parity = (parity + 1) % 2;
 				}
 			}
 		}

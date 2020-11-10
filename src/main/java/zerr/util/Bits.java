@@ -6,11 +6,6 @@ public class Bits extends BitSet {
 	public static final int ONE_BYTE = 8; 
 	private int length;
 
-	@Override
-	public int length() {
-		return length;
-	}
-	
 	public Bits() {
 		length = 0;
 	}
@@ -19,7 +14,17 @@ public class Bits extends BitSet {
 		super(size);
 		length = size;
 	}
-
+	
+	public void invert(int pos) {
+		if(pos < 0 || pos > length) System.err.println("fail " + pos);
+		this.set(pos,!this.get(pos));
+	}
+	
+	@Override
+	public int length() {
+		return length;
+	}
+	
 	public static Bits from(final byte msg) {
 		return bitSet2Bits(BitSet.valueOf(new byte[] { msg }), 64);
 	}

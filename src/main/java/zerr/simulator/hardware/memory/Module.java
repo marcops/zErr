@@ -9,7 +9,6 @@ import zerr.configuration.model.ModuleConfModel;
 @Data
 @Builder
 public final class Module {
-	
 	private HashMap<Integer, Rank> hashRank;
 	private Integer amount;
 	private ChannelBuffer channelBuffer;

@@ -14,10 +14,10 @@ import org.junit.jupiter.api.Test;
  * Most of the test cases were copied from the Python code to make sure that the
  * Java code does the same thing.
  */
-public class ReedSolomonTest {
+class ReedSolomonTest {
 
 	@Test
-	public void testSimple81EncodeDecode() {
+	void testSimple81EncodeDecode() {
 		byte[][] dataShards = new byte[][] {
 				// WORD 64
 				new byte[] { (char) 'A', (char) 'B', (char) 'C', (char) 'D', (char) 'E', (char) 'F', (char) 'G', (char) 'H' },

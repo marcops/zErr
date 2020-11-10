@@ -19,8 +19,20 @@ public final class Controller {
 	private HashMap<Integer, Module> hashModule;
 	private EccType eccType;
 	private ChannelMode channelMode;
-	private Address virtualAddress;
+	private VirtualAddressService virtualAddress;
 	private ControllerECC controllerEcc;
+	
+	public void waitSync() throws InterruptedException {
+		boolean finished = false;
+		while (!finished) {
+			// TODO pensar no futuro como melhorar
+			Thread.sleep(250);
+			finished = true;
+			for (int i = 0; i < hashModule.size(); i++) {
+				finished &= hashModule.get(i).getChannelBuffer().getIn().size() == 0;
+			}
+		}
+	}
 	
 	public static Controller create(ControllerConfModel controller) {
 		HashMap<Integer, Module> hash = new HashMap<>();
@@ -33,30 +45,20 @@ public final class Controller {
 				.channelMode(controller.getChannelMode())
 				.controllerEcc(ControllerECC.builder().eccType(controller.getEccType()).build())
 				.build();
-		c.setVirtualAddress(Address.create(c));
+		c.setVirtualAddress(VirtualAddressService.create(c));
 		return c;
 	}
 
-	public void write(Bits msg, int vAddress) {
-		long mod = virtualAddress.getModule(vAddress);
-		long ra = virtualAddress.getRank(vAddress);
-		long bg = virtualAddress.getBankGroup(vAddress);
-		long b = virtualAddress.getBank(vAddress);
-		long r = virtualAddress.getRow(vAddress);
-		long c = virtualAddress.getColumn(vAddress);
-		log.info("W-vAddress [" + vAddress + "]" + ", c=" + c + ", r=" + r + ", b=" + b + ", bg=" + bg  + ", rank=" + ra + ", module=" + mod + ", data=" + msg.toLong());
-		this.writeEvent(Bits.from(r), Bits.from(c), Bits.from(b), Bits.from(bg), Bits.from(ra), Bits.from(mod), controllerEcc.encode(msg));
+	public void write(Bits msg, long vAddress) {
+		VirtualAddress va = virtualAddress.getVirtualAddress(vAddress);
+		log.info("W-" + va.toString()+ ", data=" + msg.toLong());
+		this.writeEvent(va, controllerEcc.encode(msg));
 	}
 
-	public Bits read(int vAddress) throws InterruptedException {
-		long mod = virtualAddress.getModule(vAddress);
-		long ra = virtualAddress.getRank(vAddress);
-		long bg = virtualAddress.getBankGroup(vAddress);
-		long b = virtualAddress.getBank(vAddress);
-		long r = virtualAddress.getRow(vAddress);
-		long c = virtualAddress.getColumn(vAddress);
-		Bits msg = this.readEvent(Bits.from(r), Bits.from(c), Bits.from(b), Bits.from(bg), Bits.from(ra), Bits.from(mod));
-		log.info("R-vAddress [" + vAddress + "]" + ", c=" + c + ", r=" + r + ", b=" + b + ", bg=" + bg  + ", rank=" + ra + ", module=" + mod + ", data=" + msg.toLong());
+	public Bits read(long vAddress) throws InterruptedException {
+		VirtualAddress va = virtualAddress.getVirtualAddress(vAddress);
+		Bits msg = this.readEvent(va);
+		log.info("R-" + va.toString() + ", data=" + msg.toLong());
 		return controllerEcc.decode(msg);
 	}
 
@@ -76,8 +78,10 @@ public final class Controller {
 			.getHashBankGroup().get((int)bg)
 			.getHashBank().get((int)b)
 			.getHashCell().get(bitPosition);
-		int pos =  (int)(r*c);
-		cell.getIcell().set(pos, !cell.getIcell().get(pos));
+		
+		log.info("I-vAddress [" + vAddress + "]" + ", c=" + c + ", r=" + r + ", b=" + b + ", bg=" + bg  + ", rank=" + ra + ", module=" + mod );
+		int pos =  (int)((r*cell.getColumnsLength()) + c);
+		cell.getIcell().invert(pos);
 	}
 	
 	public void shutdown() {
@@ -87,33 +91,33 @@ public final class Controller {
 					.build());
 	}
 
-	public void writeEvent(Bits addressRow, Bits addressCol, Bits bank, Bits bankGroup, Bits rank, Bits mod, final Bits data) {
+	public void writeEvent(VirtualAddress vAddress, final Bits data) {
 		this.sendCommand(ChannelEvent.builder()
-				.address(addressRow)
-				.bank(bank)
-				.bankGroup(bankGroup)
-				.rank(rank)
+				.address(vAddress.getRow())
+				.bank(vAddress.getBank())
+				.bankGroup(vAddress.getBankGroup())
+				.rank(vAddress.getRank())
+				.module(vAddress.getModule())
 				.data(data)
-				.module(mod)
 				.controlSignal(ControlSignal.loadRow())
 				.build());
 		
 		this.sendCommand(ChannelEvent.builder()
-				.address(addressCol)
-				.bank(bank)
-				.bankGroup(bankGroup)
-				.rank(rank)
+				.address(vAddress.getColumn())
+				.bank(vAddress.getBank())
+				.bankGroup(vAddress.getBankGroup())
+				.rank(vAddress.getRank())
+				.module(vAddress.getModule())
 				.data(data)
-				.module(mod)
 				.controlSignal(ControlSignal.setSenseAmpColumn())
 				.build());
 		
 		this.sendCommand(ChannelEvent.builder()
-				.bank(bank)
-				.bankGroup(bankGroup)
-				.rank(rank)
+				.bank(vAddress.getBank())
+				.bankGroup(vAddress.getBankGroup())
+				.rank(vAddress.getRank())
+				.module(vAddress.getModule())
 				.data(data)
-				.module(mod)
 				.controlSignal(ControlSignal.writeCell())
 				.build());
 	}
@@ -122,33 +126,33 @@ public final class Controller {
 		hashModule.get(command.getModule().toInt()).sendCommand(command);
 	}
 
-	public Bits readEvent(Bits addressRow,Bits addressCol, Bits bank, Bits bankGroup, Bits rank, Bits mod) throws InterruptedException {
+	public Bits readEvent(VirtualAddress vAddress) throws InterruptedException {
 			this.sendCommand(ChannelEvent.builder()
-					.address(addressRow)
-					.bank(bank)
-					.bankGroup(bankGroup)
-					.rank(rank)
+					.address(vAddress.getRow())
+					.bank(vAddress.getBank())
+					.bankGroup(vAddress.getBankGroup())
+					.rank(vAddress.getRank())
+					.module(vAddress.getModule())
 					.data(new Bits())
-					.module(mod)
 					.controlSignal(ControlSignal.loadRow())
 					.build());
 			
 			this.sendCommand(ChannelEvent.builder()
-					.address(addressCol)
-					.bank(bank)
-					.bankGroup(bankGroup)
-					.rank(rank)
+					.address(vAddress.getColumn())
+					.bank(vAddress.getBank())
+					.bankGroup(vAddress.getBankGroup())
+					.rank(vAddress.getRank())
+					.module(vAddress.getModule())
 					.data(new Bits())
-					.module(mod)
 					.controlSignal(ControlSignal.loadColumn())
 					.build());
 			
 			return this.sendCommandAndWait(ChannelEvent.builder()
-					.bank(bank)
-					.bankGroup(bankGroup)
-					.rank(rank)
+					.bank(vAddress.getBank())
+					.bankGroup(vAddress.getBankGroup())
+					.rank(vAddress.getRank())
+					.module(vAddress.getModule())
 					.data(new Bits())
-					.module(mod)
 					.controlSignal(ControlSignal.dataOkToRead())
 					.build()).getData();
 	}

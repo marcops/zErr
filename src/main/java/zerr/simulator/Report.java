@@ -1,5 +1,7 @@
 package zerr.simulator;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import lombok.Getter;
 
 @Getter
@@ -13,15 +15,16 @@ public final class Report {
 		return INSTANCE;
 	}
 
-	private Integer hardError = 0;
-	private Integer softError = 0;
+	private AtomicLong hardError  = new AtomicLong();
+	private AtomicLong softError = new AtomicLong();
 
 	public void increaseHardError() {
-		hardError++;
+		System.out.println("caa");
+		hardError.incrementAndGet();
 	}
 
 	public void increaseSoftError() {
-		softError++;
+		softError.incrementAndGet();
 	}
 	
 	public String getReport() {
