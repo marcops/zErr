@@ -35,6 +35,18 @@ class SimulatorTest {
 		os.writeAndSync(Bits.from(Long.MAX_VALUE), 0);
 		assertEquals(Long.MAX_VALUE, os.read(0).toLong());
 	}
+	
+	@Test
+	void longMaxInvertLastPositionTest() throws Exception {
+		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesCRC8.json");
+		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
+		OperationalSystem os = OperationalSystem.create(hwd);
+
+		// escreve 64 bits para testar varios 1...1.1.1.1.1.1.1
+		os.writeAndSync(Bits.from(Long.MAX_VALUE), 0);
+		os.invertBit(0, 62);
+		assertEquals(0, os.read(0).toLong());
+	}
 
 	@Test
 	void longNegativeTest() throws Exception {
@@ -45,17 +57,9 @@ class SimulatorTest {
 //		//escrevre 64 bits para testar n. negativo
 		os.writeAndSync(Bits.from(-1), 0);
 		assertEquals(-1L, os.read(0).toLong());
-//
-//		
-//		//testa invertendo dois bits da palavra pepa para ver o que acontece..
-//		os.write(Bits.from(msg), 0);
-//		os.invertBit(2, 5);
-//		os.invertBit(0, 5);
-//		for (int i = 0; i < msg.length(); i++) {
-//			System.out.println("vMem[" + i + "] " + (char) os.read(i).toInt());
-//		}
 	}
 
+	
 	@Test
 	void oneWordInvertedCRC8Test() throws Exception {
 		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesCRC8.json");
@@ -102,4 +106,6 @@ class SimulatorTest {
 			assertEquals(msg.charAt(i), (char) os.read(i).toInt());
 		}
 	}
+	
+	
 }

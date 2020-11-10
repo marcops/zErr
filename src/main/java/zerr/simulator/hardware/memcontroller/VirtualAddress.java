@@ -14,17 +14,34 @@ public class VirtualAddress {
 	private Bits bank;
 	private Bits row;
 	private Bits column;
+	
+	private int columnLength;
 
 	public static VirtualAddress create(VirtualAddressService vas, long vAddress) {
-		return VirtualAddress.builder().vAddress(vAddress).module(Bits.from(vas.getModule(vAddress)))
-				.rank(Bits.from(vas.getRank(vAddress))).bankGroup(Bits.from(vas.getBankGroup(vAddress)))
-				.bank(Bits.from(vas.getBank(vAddress))).row(Bits.from(vas.getRow(vAddress)))
-				.column(Bits.from(vas.getColumn(vAddress))).build();
+		return VirtualAddress.builder()
+				.vAddress(vAddress)
+				.module(Bits.from(vas.getModule(vAddress)))
+				.rank(Bits.from(vas.getRank(vAddress)))
+				.bankGroup(Bits.from(vas.getBankGroup(vAddress)))
+				.bank(Bits.from(vas.getBank(vAddress)))
+				.row(Bits.from(vas.getRow(vAddress)))
+				.column(Bits.from(vas.getColumn(vAddress)))
+				.columnLength((int)vas.getColumnSize())
+				.build();
 	}
 
+	public int getCellPosition() {
+		return (getRow().toInt()*columnLength) + getColumn().toInt();
+	}
+	
 	@Override
 	public String toString() {
-		return "VirtualAddress [" + vAddress + "] [module=" + module.toInt() + ", rank=" + rank.toInt() + ", bankGroup="
-				+ bankGroup.toInt() + ", bank=" + bank.toInt() + ", row=" + row.toInt() + ", column=" + column.toInt() + "]";
+		return "VirtualAddress [" + vAddress + "] [module=" + module.toInt() 
+			+ ", rank=" + rank.toInt() 
+			+ ", bankGroup=" + bankGroup.toInt() 
+			+ ", bank=" + bank.toInt() 
+			+ ", row=" + row.toInt() 
+			+ ", column=" 
+			+ column.toInt() + "]";
 	}
 }

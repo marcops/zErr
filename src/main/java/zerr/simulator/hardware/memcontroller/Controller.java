@@ -64,26 +64,25 @@ public final class Controller {
 	}
 
 
-	public void invertBit(int vAddress, int bitPosition) {
-		long mod = virtualAddress.getModule(vAddress);
-		long ra = virtualAddress.getRank(vAddress);
-		long bg = virtualAddress.getBankGroup(vAddress);
-		long b = virtualAddress.getBank(vAddress);
-		long r = virtualAddress.getRow(vAddress);
-		long c = virtualAddress.getColumn(vAddress);
+	public void invertBit(long vAddress, int bitPosition) {
+		if(bitPosition<0 || bitPosition >= 64) {
+			throw new IllegalArgumentException("bitPosition between 0 and 64");
+		}
 		
+		VirtualAddress va = virtualAddress.getVirtualAddress(vAddress);
+		int chipPos = bitPosition/8;
 		Cell cell = this
-			.getHashModule().get((int)mod)
-			.getHashRank().get((int)ra)
-			.getHashChip().get((int)c)
-			.getHashBankGroup().get((int)bg)
-			.getHashBank().get((int)b)
-			.getHashCell().get(bitPosition);
+			.getHashModule().get(va.getModule().toInt())
+			.getHashRank().get(va.getRank().toInt())
+			.getHashChip().get(chipPos)
+			.getHashBankGroup().get(va.getBankGroup().toInt())
+			.getHashBank().get(va.getBank().toInt())
+			.getHashCell().get(bitPosition-(chipPos*8));
 		
-		log.info("I-vAddress [" + vAddress + "]" + ", c=" + c + ", r=" + r + ", b=" + b + ", bg=" + bg  + ", rank=" + ra + ", module=" + mod );
-		int pos =  (int)((r*cell.getColumnsLength()) + c);
-		cell.getIcell().invert(pos);
+		log.info("I-" + va);
+		cell.getIcell().invert(va.getCellPosition());
 	}
+
 	
 	public void shutdown() {
 		for (int i = 0; i < hashModule.size(); i++)
