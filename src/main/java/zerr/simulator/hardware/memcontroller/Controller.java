@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import zerr.configuration.model.ControllerConfModel;
+import zerr.simulator.hardware.memcontroller.ecc.CRC8;
+import zerr.simulator.hardware.memcontroller.ecc.Hamming;
 import zerr.simulator.hardware.memory.Cell;
 import zerr.simulator.hardware.memory.ChannelEvent;
 import zerr.simulator.hardware.memory.ControlSignal;
@@ -43,7 +45,7 @@ public final class Controller {
 		long r = virtualAddress.getRow(vAddress);
 		long c = virtualAddress.getColumn(vAddress);
 		log.info("W-vAddress [" + vAddress + "]" + ", c=" + c + ", r=" + r + ", b=" + b + ", bg=" + bg  + ", rank=" + ra + ", module=" + mod + ", data=" + msg.toLong());
-		this.writeEvent(Bits.from(r), Bits.from(c), Bits.from(b), Bits.from(bg), Bits.from(ra), Bits.from(mod), msg);
+		this.writeEvent(Bits.from(r), Bits.from(c), Bits.from(b), Bits.from(bg), Bits.from(ra), Bits.from(mod), encodeData(msg));
 	}
 
 	public Bits read(int vAddress) throws InterruptedException {
@@ -55,7 +57,7 @@ public final class Controller {
 		long c = virtualAddress.getColumn(vAddress);
 		Bits msg = this.readEvent(Bits.from(r), Bits.from(c), Bits.from(b), Bits.from(bg), Bits.from(ra), Bits.from(mod));
 		log.info("R-vAddress [" + vAddress + "]" + ", c=" + c + ", r=" + r + ", b=" + b + ", bg=" + bg  + ", rank=" + ra + ", module=" + mod + ", data=" + msg.toLong());
-		return msg;
+		return decodeData(msg);
 	}
 
 
@@ -85,21 +87,34 @@ public final class Controller {
 					.build());
 	}
 
-	private void sendCommand(ChannelEvent command) {
-		if(eccType == EccType.HAMMING_SECDEC) {
-			Bits b = Hamming.encode(command.getData());
-			command.setData(b);
+	private Bits encodeData(Bits data) {
+		if(eccType == EccType.CRC8) {
+			byte br = CRC8.encode(data.toByteArray());
+			System.out.println("gerado=" + (int)br);
+			data.append(Bits.from(br));
+			return data;
 		}
-		hashModule.get(command.getModule().toInt()).sendCommand(command);
+		if(eccType == EccType.HAMMING_SECDEC) {
+			return Hamming.encode(data);
+		}
+		return data;
 	}
 
-	private ChannelEvent sendCommandAndWait(ChannelEvent command) throws InterruptedException {
-		ChannelEvent received = hashModule.get(command.getModule().toInt()).sendCommandAndWait(command);
-		if(eccType == EccType.HAMMING_SECDEC) {
-			Bits b = Hamming.decode(received.getData());
-			received.setData(b);
+	private Bits decodeData(Bits data) {
+		if(eccType == EccType.CRC8) {
+			byte[] loaded = data.toByteArray();
+			byte crc = CRC8.encode(loaded, 0, 8);
+			if(loaded[8] == crc)
+				System.out.println("igual" + (int)crc);
+			else
+				System.out.println("fail");
+			return data;
 		}
-		return received;
+		
+		if(eccType == EccType.HAMMING_SECDEC) {
+			return Hamming.decode(data);
+		}
+		return data;
 		
 	}
 	
@@ -134,6 +149,10 @@ public final class Controller {
 				.build());
 	}
 
+	private void sendCommand(ChannelEvent command) {
+		hashModule.get(command.getModule().toInt()).sendCommand(command);
+	}
+
 	public Bits readEvent(Bits addressRow,Bits addressCol, Bits bank, Bits bankGroup, Bits rank, Bits mod) throws InterruptedException {
 			this.sendCommand(ChannelEvent.builder()
 					.address(addressRow)
@@ -163,5 +182,9 @@ public final class Controller {
 					.module(mod)
 					.controlSignal(ControlSignal.dataOkToRead())
 					.build()).getData();
+	}
+
+	private ChannelEvent sendCommandAndWait(ChannelEvent command) throws InterruptedException {
+		return hashModule.get(command.getModule().toInt()).sendCommandAndWait(command);
 	}
 }

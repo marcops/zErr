@@ -1,4 +1,4 @@
-package zerr.simulator.os;
+package zerr.simulator.hardware.memcontroller.ecc;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
-import zerr.simulator.hardware.memcontroller.Hamming;
 import zerr.util.Bits;
 
 public class HammingTest {

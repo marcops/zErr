@@ -12,7 +12,7 @@ public final class Simulator {
 	private Simulator() {}
 	
 	public static void run() throws Exception {
-		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesECCDualChannel.json");
+		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesCRC8.json");
 		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
 		log.info(hwd.toString());
 

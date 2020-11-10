@@ -92,4 +92,13 @@ public class Bits extends BitSet {
 			b.set(i, msgs[i] == 1);
 		return b;
 	}
+	
+	@Override
+	public byte[] toByteArray() {
+		byte [] bytes = new byte[length/ONE_BYTE]; 
+		for(int i=0;i<length/ONE_BYTE;i++) {
+			bytes[i] = (byte) subbit(i*ONE_BYTE, ONE_BYTE).toInt();
+		}
+		return bytes;
+	}
 }

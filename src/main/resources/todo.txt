@@ -1,0 +1,13 @@
+1. Implementar reed solomon (e/outros) (checksum);
+2. Gravar estatisticas de erro;
+3. Colocar no simulador erros aleatorios;
+4. fazer + de 1 app rodando;
+5. Ler traces e fazer a simulação do app real. (valgrind/GEM5)
+6. Colocar os timmings de tCas/tras/mcPat
+
+7. Gerar Report:
+* X leituras no Endereço
+* Quantidade de erro e seu endereço (n. caracteristicas  para aplicar)
+* Consumo de energia
+* Total de Ciclos
+* Latencia média

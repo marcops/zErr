@@ -1,4 +1,4 @@
-package zerr.simulator.hardware.memcontroller;
+package zerr.simulator.hardware.memcontroller.ecc;
 
 import zerr.util.Bits;
 
@@ -11,7 +11,6 @@ public class Hamming {
 		return v;
 	}
 
-	
 	public static int[] encode(int[] signal) {
 
 		int[] generatedCode;
@@ -132,17 +131,18 @@ public class Hamming {
 	}
 
 	public static Bits encode(Bits signal) {
-		int []a = signal.toIntArray();
-		int [] r = encode(a);
+		int[] a = signal.toIntArray();
+		int[] r = encode(a);
 		Bits b = Bits.from(r);
 		return b;
-		
+
 	}
-	
+
 	public static Bits decode(Bits data) {
-		int []a = data.toIntArray();
-		int [] r = decode(a);
-		if(r == null) return new Bits();
+		int[] a = data.toIntArray();
+		int[] r = decode(a);
+		if (r == null)
+			return new Bits();
 		return Bits.from(r);
 	}
 
