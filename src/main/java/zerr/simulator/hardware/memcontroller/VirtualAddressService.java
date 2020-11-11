@@ -18,6 +18,10 @@ public class VirtualAddressService {
 	private long maxAddress;
 	private ChannelMode mode;
 
+	public long getMaxAddress() {
+		return maxAddress;
+	}
+	
 	public long getColumnSize() {
 		return columnSize;
 	}

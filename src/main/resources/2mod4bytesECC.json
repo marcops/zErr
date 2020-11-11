@@ -1,5 +1,10 @@
 {
-  "simulator" : { },
+  "simulator" : {
+    "faultinjection" : {
+      "mode" : "RANDOM_TIME",
+      "every" : 100
+    }
+  },
   "hardware" : {
     "controller" : {
       "eccType" : "HAMMING_SECDEC",

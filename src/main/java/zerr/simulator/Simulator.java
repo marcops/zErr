@@ -1,5 +1,6 @@
 package zerr.simulator;
 
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import zerr.configuration.ConfigurationService;
 import zerr.configuration.model.ZErrConfModel;
@@ -8,25 +9,37 @@ import zerr.simulator.os.OperationalSystem;
 import zerr.test.HelloWordApp;
 
 @Slf4j
+@Builder
 public final class Simulator {
-	private Simulator() {}
+//	private ZErrConfModel zErrConfiguration;
+//	private Hardware hardware;
+	private OperationalSystem operationalSystem;
+	private FaultInjection faultInjection;
 	
-	public static void run() throws Exception {
-		//2mod4bytesCRC8.json
-		//2mod4bytesECCDualChannel
-		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesCRC8.json");
-		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
-		log.info("Hardware loaded = " + hwd.toString());
+	//"2mod4bytesECC.json"
+	public static Simulator create(String configFile) throws Exception {
+		ZErrConfModel zerr = new ConfigurationService().load(configFile);
+		log.info("Config loaded = " + zerr.toString());
 		
-		OperationalSystem os = OperationalSystem.create(hwd);
-		FailInjection fail = FailInjection.create(os);
-		fail.start();
-		
-		HelloWordApp hl = new HelloWordApp(os);
-		hl.exec();
-		
-		os.shutdown();
-		fail.shutdown();
+		Hardware hwd = Hardware.create(zerr.getHardware());
+		FaultInjection fault = FaultInjection.create(zerr.getSimulator(), hwd);
+		return Simulator.builder()
+//				.zErrConfiguration(zerr)
+//				.hardware(hwd)
+				.operationalSystem(OperationalSystem.create(hwd))
+				.faultInjection(fault)
+				.build();
+	}
+	
+	public void run() throws InterruptedException {
+		faultInjection.start();
+		try {
+			HelloWordApp hl = new HelloWordApp(operationalSystem);
+			hl.exec();
+		} finally {
+			operationalSystem.shutdown();
+			faultInjection.shutdown();
+		}
 		
 		log.info(Report.getInstance().getReport());
 	}

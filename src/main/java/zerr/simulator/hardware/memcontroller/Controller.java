@@ -60,7 +60,7 @@ public final class Controller {
 		VirtualAddress va = virtualAddress.getVirtualAddress(vAddress);
 		Bits msg = this.readEvent(va);
 		log.info("R-" + va.toString() + ", data=" + msg.toLong());
-		return controllerEcc.decode(msg);
+		return controllerEcc.decode(vAddress, msg);
 	}
 
 
@@ -79,7 +79,7 @@ public final class Controller {
 			.getHashBank().get(va.getBank().toInt())
 			.getHashCell().get(bitPosition-(chipPos*8));
 		
-		log.info("I-" + va);
+		log.info("I-" + va + " bitPosition="+bitPosition );
 		cell.getIcell().invert(va.getCellPosition());
 	}
 

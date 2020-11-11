@@ -11,7 +11,6 @@ public class OperationalSystem {
 	private Hardware hardware;
 	private Integer memorySize;
 	
-	
 	public static OperationalSystem create(Hardware hwd) {
 		return OperationalSystem.builder()
 				.hardware(hwd)

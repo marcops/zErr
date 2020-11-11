@@ -1,6 +1,8 @@
-1. Implementar reed solomon (e/outros) (checksum);
-2. Gravar estatisticas de erro;
+1. Implementar reed solomon (e/outros) (checksum); - ok checksum
+2. Gravar estatisticas de erro; 
+-- adicionar a Colocar posicao com erro e qts vezes deu erro nela.
 3. Colocar no simulador erros aleatorios;
+-- Parcial
 4. fazer + de 1 app rodando;
 5. Ler traces e fazer a simulação do app real. (valgrind/GEM5)
 6. Colocar os timmings de tCas/tras/mcPat
