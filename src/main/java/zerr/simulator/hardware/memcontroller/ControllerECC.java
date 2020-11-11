@@ -28,15 +28,15 @@ public final class ControllerECC {
 		return data;
 	}
 
-	public Bits decode(long vAddress, Bits data) {
+	public Bits decode(long pAddress, Bits data) {
 		try {
 			return decodeDataThrow(data);
 		} catch (HardErrorException e) {
-			Report.getInstance().addError(vAddress , true);
+			Report.getInstance().addError(pAddress , true);
 			log.debug("HardError", e);
 			return new Bits();
 		} catch (SoftErrorException e) {
-			Report.getInstance().addError(vAddress , false);
+			Report.getInstance().addError(pAddress , false);
 			log.debug("SoftError", e);
 			return e.getRecovered();
 		}

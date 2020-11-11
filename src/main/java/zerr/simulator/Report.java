@@ -17,18 +17,18 @@ public final class Report {
 		return INSTANCE;
 	}
 
-	public synchronized void addError(long vAddress, boolean hard) {
-		if(!errorInformation.contains(vAddress))
-			errorInformation.put(vAddress, new ErrorInformation());	
+	public synchronized void addError(long pAddress, boolean hard) {
+		if(!errorInformation.contains(pAddress))
+			errorInformation.put(pAddress, new ErrorInformation());	
 		
-		if(hard) errorInformation.get(vAddress).getHardError().incrementAndGet();
-		else errorInformation.get(vAddress).getSoftError().incrementAndGet();
+		if(hard) errorInformation.get(pAddress).getHardError().incrementAndGet();
+		else errorInformation.get(pAddress).getSoftError().incrementAndGet();
 	}
 	
 	public String getReport() {
 		String ret = "\r\n---- SIMULATION FINISHED --- \r\n";
 		ret += errorInformation.entrySet().stream()
-		  .map(entry -> "\tvAddress[" + entry.getKey() + "] " + entry.getValue())
+		  .map(entry -> "\tpAddress[" + entry.getKey() + "] " + entry.getValue())
           .collect(Collectors.joining("\r\n"));
 		return ret;
 	}

@@ -17,31 +17,31 @@ public class OperationalSystem {
 				.build();
 	}
 
-	public void write(Bits[] msg, int vAddress) {
-		for (int i = 0; i < msg.length; i++) write(msg[i], vAddress + i);
+	public void write(Bits[] msg, int pAddress) {
+		for (int i = 0; i < msg.length; i++) write(msg[i], pAddress + i);
 	}
 	//TEST PROPOSE ONLY
-	public void writeAndSync(Bits[] msg, int vAddress) throws InterruptedException {
-		write(msg, vAddress);
+	public void writeAndSync(Bits[] msg, int pAddress) throws InterruptedException {
+		write(msg, pAddress);
 		hardware.getController().waitSync();
 	}
 	//TEST PROPOSE ONLY
-	public void writeAndSync(Bits msg, int vAddress) throws InterruptedException {
-		write(msg, vAddress);
+	public void writeAndSync(Bits msg, int pAddress) throws InterruptedException {
+		write(msg, pAddress);
 		hardware.getController().waitSync();
 	}
 
 
-	public void write(Bits bits, int vAddress) {
-		hardware.getController().write(bits, vAddress);
+	public void write(Bits bits, int pAddress) {
+		hardware.getController().write(bits, pAddress);
 	}
 
-	public void invertBit(int vAddress, int bitPosition) {
-		hardware.getController().invertBit(vAddress, bitPosition);
+	public void invertBit(int pAddress, int bitPosition) {
+		hardware.getController().invertBit(pAddress, bitPosition);
 	}
 
-	public Bits read(int vAddress) throws InterruptedException {
-		return hardware.getController().read(vAddress);
+	public Bits read(int pAddress) throws InterruptedException {
+		return hardware.getController().read(pAddress);
 	}
 
 	public void shutdown() {
