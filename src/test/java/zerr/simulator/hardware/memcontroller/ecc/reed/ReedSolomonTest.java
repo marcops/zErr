@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
  * Most of the test cases were copied from the Python code to make sure that the
  * Java code does the same thing.
  */
+@SuppressWarnings("static-method")
 class ReedSolomonTest {
 
 	@Test

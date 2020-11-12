@@ -12,7 +12,7 @@ public class ErrorInformation {
 	public String toString() {
 		String ret = "";
 		if (hardError.get() > 0) ret += "hard=" + hardError;
-		if (softError.get() > 0) ret += " soft=" + softError;
+		if (softError.get() > 0) ret += "soft=" + softError;
 		return ret;
 	}
 	

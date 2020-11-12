@@ -14,7 +14,7 @@ public class ConfigurationService {
 		byte[] jsonData = Files.readAllBytes(
 					Paths.get(getClass()
 						.getClassLoader()
-						.getResource(configuration).toURI()));
+						.getResource("configs/"+configuration).toURI()));
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);

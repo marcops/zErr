@@ -2,6 +2,9 @@ package zerr.util;
 
 import java.util.BitSet;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Bits extends BitSet {
 	public static final int ONE_BYTE = 8; 
 	private int length;
@@ -16,7 +19,7 @@ public class Bits extends BitSet {
 	}
 	
 	public void invert(int pos) {
-		if(pos < 0 || pos > length) System.err.println("fail " + pos);
+		if(pos < 0 || pos > length) log.error("bit invert fail " + pos);
 		this.set(pos,!this.get(pos));
 	}
 	

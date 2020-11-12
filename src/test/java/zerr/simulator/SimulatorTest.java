@@ -10,6 +10,7 @@ import zerr.simulator.hardware.Hardware;
 import zerr.simulator.os.OperationalSystem;
 import zerr.util.Bits;
 
+@SuppressWarnings("static-method")
 class SimulatorTest {
 
 	@Test
@@ -107,5 +108,43 @@ class SimulatorTest {
 		}
 	}
 	
+	
+	@Test
+	void largeLoadMemoryTest() throws Exception {
+		ZErrConfModel zErrConfiguration = new ConfigurationService().load("64MBEcc.json");
+		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
+		OperationalSystem os = OperationalSystem.create(hwd);
+
+		os.writeAndSync(Bits.from("P"), 25805);
+		assertEquals('P', (char) os.read(25805).toInt());
+	}
+	
+	
+	@Test
+	void testAllAdressAndPositionDualMemoryTest() throws Exception {
+		testFullAddress("MemEccDual.json");	
+	}
+	
+	@Test
+	void testAllAdressAndPositionMemoryTest() throws Exception {
+		testFullAddress("MemEccSingle.json");	
+	}
+	
+	@Test
+	void testAllAdressAndPosition2MemoryTest() throws Exception {
+		testFullAddress("2MemEccSingle.json");
+	}
+
+	private static void testFullAddress(String file) throws Exception, InterruptedException {
+		ZErrConfModel zErrConfiguration = new ConfigurationService().load(file);
+		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
+		OperationalSystem os = OperationalSystem.create(hwd);
+		System.out.println(hwd.getController().getPhysicalAddress().getMaxAddress());
+		
+		for (long i = 0; i < hwd.getController().getPhysicalAddress().getMaxAddress(); i++) {
+			os.writeAndSync(Bits.from("P"), i);
+			assertEquals('P', (char) os.read(i).toInt());
+		}
+	}
 	
 }

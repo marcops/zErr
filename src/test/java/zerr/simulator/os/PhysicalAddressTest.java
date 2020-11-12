@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import zerr.simulator.Util;
 import zerr.simulator.hardware.memcontroller.PhysicalAddressService;
 
+@SuppressWarnings("static-method")
 class PhysicalAddressTest {
 
 	@Test

@@ -6,7 +6,7 @@ import zerr.configuration.ConfigurationService;
 import zerr.configuration.model.ZErrConfModel;
 import zerr.simulator.hardware.Hardware;
 import zerr.simulator.os.OperationalSystem;
-import zerr.test.HelloWordApp;
+import zerr.test.Gem5Loader;
 
 @Slf4j
 @Builder
@@ -34,8 +34,10 @@ public final class Simulator {
 	public void run() throws InterruptedException {
 		faultInjection.start();
 		try {
-			HelloWordApp hl = new HelloWordApp(operationalSystem);
-			hl.exec();
+			Gem5Loader gl = new Gem5Loader(operationalSystem);
+			gl.exec("gem5/aPlusOne.txt");
+//			HelloWordApp hl = new HelloWordApp(operationalSystem);
+//			hl.exec();
 		} finally {
 			operationalSystem.shutdown();
 			faultInjection.shutdown();

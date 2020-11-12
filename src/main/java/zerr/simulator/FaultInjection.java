@@ -35,8 +35,10 @@ public class FaultInjection extends Thread {
 				mode.exec(this);
 			} catch (Exception e) {
 				log.info("running faultInjection", e);
+				return;
 			}
 		}
+		log.info("faultInjection shutdown");
 	}
 
 	public void shutdown() {

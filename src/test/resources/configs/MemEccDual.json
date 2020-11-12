@@ -1,0 +1,35 @@
+{
+  "simulator" : {
+    "faultinjection" : {
+      "mode" : "RANDOM_TIME",
+      "every" : 100
+    }
+  },
+  "hardware" : {
+    "controller" : {
+      "eccType" : "HAMMING_SECDEC",
+      "channelMode" : "DUAL_CHANNEL",
+      "module" : {
+        "amount" : 2,
+        "name" : "oldestDDR",
+        "bufferSize" : 10000,
+        "rank" : {
+          "amount" : 2,
+          "chip" : {
+            "amount" : 9,
+            "bankGroup" : {
+              "amount" : 2,
+              "bank" : {
+                "amount" : 2,
+                "cell" : {
+                  "row" : 2,
+                  "columns" : 2
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

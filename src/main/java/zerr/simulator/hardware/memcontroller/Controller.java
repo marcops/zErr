@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import zerr.configuration.model.ControllerConfModel;
+import zerr.simulator.Report;
 import zerr.simulator.hardware.memory.Cell;
 import zerr.simulator.hardware.memory.ChannelEvent;
 import zerr.simulator.hardware.memory.ControlSignal;
@@ -14,7 +14,7 @@ import zerr.util.Bits;
 
 @Builder
 @Data
-@Slf4j
+//@Slf4j
 public final class Controller {
 	private HashMap<Integer, Module> hashModule;
 	private EccType eccType;
@@ -30,7 +30,7 @@ public final class Controller {
 			Thread.sleep(250);
 			finished = true;
 			for (int i = 0; i < hashModule.size(); i++) {
-				finished &= hashModule.get(i).getChannelBuffer().getIn().size() == 0;
+				finished &= hashModule.get(i).getChannelBuffer().getIn().isEmpty();
 			}
 		}
 	}
@@ -51,15 +51,17 @@ public final class Controller {
 	}
 
 	public void write(Bits msg, long pAddress) {
+		Report.getInstance().addWriteInstruction();
 		PhysicalAddress va = physicalAddress.getPhysicalAddress(pAddress);
-		log.info("W-" + va.toString()+ ", data=" + msg.toLong());
+//		log.info("W-" + va.toString()+ ", data=" + msg.toLong());
 		this.writeEvent(va, controllerEcc.encode(msg));
 	}
 
 	public Bits read(long pAddress) throws InterruptedException {
+		Report.getInstance().addReadInstruction();
 		PhysicalAddress va = physicalAddress.getPhysicalAddress(pAddress);
 		Bits msg = this.readEvent(va);
-		log.info("R-" + va.toString() + ", data=" + msg.toLong());
+//		log.info("R-" + va.toString() + ", data=" + msg.toLong());
 		return controllerEcc.decode(pAddress, msg);
 	}
 
@@ -79,7 +81,7 @@ public final class Controller {
 			.getHashBank().get(va.getBank().toInt())
 			.getHashCell().get(bitPosition-(chipPos*8));
 		
-		log.info("I-" + va + " bitPosition="+bitPosition );
+//		log.info("I-" + va + " bitPosition="+bitPosition );
 		cell.getIcell().invert(va.getCellPosition());
 	}
 

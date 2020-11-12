@@ -7,5 +7,5 @@ import zerr.util.Bits;
 @Data
 @AllArgsConstructor
 public class HardErrorException extends Exception {
-	private Bits input;
+	private final Bits input;
 }

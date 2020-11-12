@@ -10,6 +10,7 @@ import zerr.exception.HardErrorException;
 import zerr.exception.SoftErrorException;
 import zerr.util.Bits;
 
+@SuppressWarnings("static-method")
 class HammingTest {
 	@Test
 	void validateHamming() throws HardErrorException, SoftErrorException {

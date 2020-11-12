@@ -12,7 +12,7 @@ public class HelloWordApp {
 		this.os = os;
 	}
 
-	//build/X86/gem5.opt --debug-flags=DRAM,Exec,DRAMPower marco/simple.py
+	//build/X86/gem5.opt --debug-flags=MemoryAccess marco/simple.py  | grep zErr > a.txt
 	public void exec() throws InterruptedException {
 		for (int c = 0; c < 10; c++) {
 			log.info("cycle = " + c);

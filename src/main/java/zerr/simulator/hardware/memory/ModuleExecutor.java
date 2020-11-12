@@ -13,12 +13,16 @@ public class ModuleExecutor extends Thread {
 
 	@Override
 	public void run() {
+		System.out.println("in" + Thread.currentThread().getId()+ this.getClass().getName());
 		while (true) {
 			try {
 				ChannelEvent request = module.getChannelBuffer().getIn().take();
 				int rank = request.getRank().toInt();
-				if (rank == -1) return;
-				if (rank < 0 || rank >= module.getAmount()) {
+				if (rank == -1) { 
+					log.error("Shutdown signal");
+					return; 
+				}
+				if (rank < 0 || rank >= module.getHashRank().size()) {
 					log.error("FATAL: Wrong rank");
 					return;
 				}

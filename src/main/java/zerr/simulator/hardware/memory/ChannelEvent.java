@@ -17,4 +17,12 @@ public class ChannelEvent {
 
 	private ControlSignal controlSignal;
 
+	@Override
+	public String toString() {
+		return "ChannelEvent [data=" + data + ", address=" + address + ", rank=" + rank + ", bankGroup=" + bankGroup
+				+ ", bank=" + bank + ", module=" + module + ", controlSignal=" + controlSignal + "]";
+	}
+	
+	
+
 }

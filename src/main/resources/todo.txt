@@ -1,3 +1,9 @@
+*Pesquisar tipos de erros (Burst/ecc etc..)
+*Evoluir Simulação do erro (fazer em volta)
+*Fazer mapeamento da area afetada (RANK,bank etc) 
+*Escrever/artigos
+
+-----------
 1. Implementar reed solomon (e/outros) (checksum); - ok checksum
 2. Gravar estatisticas de erro; 
 -- adicionar a Colocar posicao com erro e qts vezes deu erro nela.
