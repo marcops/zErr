@@ -36,7 +36,7 @@ class SimulatorTest {
 		os.writeAndSync(Bits.from(Long.MAX_VALUE), 0);
 		assertEquals(Long.MAX_VALUE, os.read(0).toLong());
 	}
-	
+
 	@Test
 	void longMaxInvertLastPositionTest() throws Exception {
 		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesCRC8.json");
@@ -60,7 +60,6 @@ class SimulatorTest {
 		assertEquals(-1L, os.read(0).toLong());
 	}
 
-	
 	@Test
 	void oneWordInvertedCRC8Test() throws Exception {
 		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesCRC8.json");
@@ -77,7 +76,7 @@ class SimulatorTest {
 		}
 		assertEquals(0, (char) os.read(0).toInt());
 	}
-	
+
 	@Test
 	void oneWordInvertedHammingTest() throws Exception {
 		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesECC.json");
@@ -91,7 +90,7 @@ class SimulatorTest {
 			assertEquals(msg.charAt(i), (char) os.read(i).toInt());
 		}
 	}
-	
+
 	@Test
 	void oneWord2InvertedHammingTest() throws Exception {
 		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesECC.json");
@@ -107,8 +106,7 @@ class SimulatorTest {
 			assertEquals(msg.charAt(i), (char) os.read(i).toInt());
 		}
 	}
-	
-	
+
 	@Test
 	void largeLoadMemoryTest() throws Exception {
 		ZErrConfModel zErrConfiguration = new ConfigurationService().load("64MBEcc.json");
@@ -118,18 +116,17 @@ class SimulatorTest {
 		os.writeAndSync(Bits.from("P"), 25805);
 		assertEquals('P', (char) os.read(25805).toInt());
 	}
-	
-	
+
 	@Test
 	void testAllAdressAndPositionDualMemoryTest() throws Exception {
-		testFullAddress("MemEccDual.json");	
+		testFullAddress("MemEccDual.json");
 	}
-	
+
 	@Test
 	void testAllAdressAndPositionMemoryTest() throws Exception {
-		testFullAddress("MemEccSingle.json");	
+		testFullAddress("MemEccSingle.json");
 	}
-	
+
 	@Test
 	void testAllAdressAndPosition2MemoryTest() throws Exception {
 		testFullAddress("2MemEccSingle.json");
@@ -140,11 +137,12 @@ class SimulatorTest {
 		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
 		OperationalSystem os = OperationalSystem.create(hwd);
 		System.out.println(hwd.getController().getPhysicalAddress().getMaxAddress());
-		
+
 		for (long i = 0; i < hwd.getController().getPhysicalAddress().getMaxAddress(); i++) {
 			os.writeAndSync(Bits.from("P"), i);
 			assertEquals('P', (char) os.read(i).toInt());
 		}
+
 	}
-	
+
 }

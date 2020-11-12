@@ -14,6 +14,7 @@ import zerr.util.Bits;
 public class Gem5Loader {
 	private OperationalSystem os;
 	private long line; 
+
 	public Gem5Loader(OperationalSystem os) {
 		this.os = os;
 	}
