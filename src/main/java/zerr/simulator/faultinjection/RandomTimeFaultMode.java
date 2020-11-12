@@ -9,7 +9,7 @@ public class RandomTimeFaultMode implements IFaultMode {
 	@Override
 	public void exec(FaultInjection faultInjection) throws Exception {
 		long max = faultInjection.getHardware().getController().getPhysicalAddress().getMaxAddress();
-		long pAddress = (long) new Random().nextInt((int) max);
+		long pAddress = (long) new Random().nextInt((int)max);
 		int bitPosition = new Random().nextInt(8);
 		faultInjection.getHardware().getController().invertBit(pAddress, bitPosition);
 		

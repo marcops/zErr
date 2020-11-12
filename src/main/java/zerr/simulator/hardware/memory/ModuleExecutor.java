@@ -18,7 +18,7 @@ public class ModuleExecutor extends Thread {
 				ChannelEvent request = module.getChannelBuffer().getIn().take();
 				int rank = request.getRank().toInt();
 				if (rank == -1) return;
-				if (rank < 0 || rank >= module.getAmount()) {
+				if (rank < 0 || rank >= module.getHashRank().size()) {
 					log.error("FATAL: Wrong rank");
 					return;
 				}

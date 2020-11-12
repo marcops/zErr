@@ -9,7 +9,7 @@ import zerr.simulator.hardware.memory.Rank;
 
 @Builder
 public class PhysicalAddressService {
-	private long rowSize;
+//	private long rowSize;
 	private long columnSize;
 	private long bankSize;
 	private long bankGroupSize;
@@ -52,7 +52,7 @@ public class PhysicalAddressService {
 
 		long maxAddress = rankSize * mod.getAmount();
 		return PhysicalAddressService.builder()
-				.rowSize(row)
+//				.rowSize(row)
 				.columnSize(column)
 				.cellSize(cellSize)
 				.bankSize(bankSize)
@@ -100,7 +100,7 @@ public class PhysicalAddressService {
 	}
 
 	public long getMultColumn(long pAddress) {
-		return pAddress - (getMultRow(pAddress) * rowSize) 
+		return pAddress - (getMultRow(pAddress) * columnSize) 
 				- (getMultBank(pAddress) * cellSize)
 				- (getMultBankGroup(pAddress) * bankSize) 
 				- (getMultRank(pAddress) * bankGroupSize);
@@ -136,7 +136,7 @@ public class PhysicalAddressService {
 	}
 
 	public long getSingleColumn(long pAddress) {
-		return pAddress - (getSingleRow(pAddress) * rowSize) 
+		return pAddress - (getSingleRow(pAddress) * columnSize) 
 				- (getSingleBank(pAddress) * cellSize)
 				- (getSingleBankGroup(pAddress) * bankSize) 
 				- (getSingleRank(pAddress) * bankGroupSize)

@@ -9,7 +9,7 @@ import zerr.util.Bits;
 @Builder
 public class OperationalSystem {
 	private Hardware hardware;
-	private Integer memorySize;
+	private long memorySize;
 	
 	public static OperationalSystem create(Hardware hwd) {
 		return OperationalSystem.builder()
@@ -17,22 +17,22 @@ public class OperationalSystem {
 				.build();
 	}
 
-	public void write(Bits[] msg, int pAddress) {
+	public void write(Bits[] msg, long pAddress) {
 		for (int i = 0; i < msg.length; i++) write(msg[i], pAddress + i);
 	}
 	//TEST PROPOSE ONLY
-	public void writeAndSync(Bits[] msg, int pAddress) throws InterruptedException {
+	public void writeAndSync(Bits[] msg, long pAddress) throws InterruptedException {
 		write(msg, pAddress);
 		hardware.getController().waitSync();
 	}
 	//TEST PROPOSE ONLY
-	public void writeAndSync(Bits msg, int pAddress) throws InterruptedException {
+	public void writeAndSync(Bits msg, long pAddress) throws InterruptedException {
 		write(msg, pAddress);
 		hardware.getController().waitSync();
 	}
 
 
-	public void write(Bits bits, int pAddress) {
+	public void write(Bits bits, long pAddress) {
 		hardware.getController().write(bits, pAddress);
 	}
 
@@ -40,7 +40,7 @@ public class OperationalSystem {
 		hardware.getController().invertBit(pAddress, bitPosition);
 	}
 
-	public Bits read(int pAddress) throws InterruptedException {
+	public Bits read(long pAddress) throws InterruptedException {
 		return hardware.getController().read(pAddress);
 	}
 

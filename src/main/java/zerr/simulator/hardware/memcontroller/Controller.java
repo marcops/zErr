@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import zerr.configuration.model.ControllerConfModel;
+import zerr.simulator.Report;
 import zerr.simulator.hardware.memory.Cell;
 import zerr.simulator.hardware.memory.ChannelEvent;
 import zerr.simulator.hardware.memory.ControlSignal;
@@ -51,12 +52,14 @@ public final class Controller {
 	}
 
 	public void write(Bits msg, long pAddress) {
+		Report.getInstance().addWriteInstruction();
 		PhysicalAddress va = physicalAddress.getPhysicalAddress(pAddress);
 		log.info("W-" + va.toString()+ ", data=" + msg.toLong());
 		this.writeEvent(va, controllerEcc.encode(msg));
 	}
 
 	public Bits read(long pAddress) throws InterruptedException {
+		Report.getInstance().addReadInstruction();
 		PhysicalAddress va = physicalAddress.getPhysicalAddress(pAddress);
 		Bits msg = this.readEvent(va);
 		log.info("R-" + va.toString() + ", data=" + msg.toLong());

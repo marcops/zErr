@@ -108,4 +108,57 @@ class SimulatorTest {
 	}
 	
 	
+	@Test
+	void largeLoadMemoryTest() throws Exception {
+		ZErrConfModel zErrConfiguration = new ConfigurationService().load("64MBEcc.json");
+		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
+		OperationalSystem os = OperationalSystem.create(hwd);
+
+		testAddress(os, 25805);
+	}
+	
+	
+	@Test
+	void testAllAdressAndPositionDualMemoryTest() throws Exception {
+		ZErrConfModel zErrConfiguration = new ConfigurationService().load("MemEccDual.json");
+		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
+		OperationalSystem os = OperationalSystem.create(hwd);
+		System.out.println(hwd.getController().getPhysicalAddress().getMaxAddress());
+		
+		for (long i = 0; i < hwd.getController().getPhysicalAddress().getMaxAddress(); i++)
+			testAddress(os, i);
+		
+	}
+	
+	@Test
+	void testAllAdressAndPositionMemoryTest() throws Exception {
+		ZErrConfModel zErrConfiguration = new ConfigurationService().load("MemEccSingle.json");
+		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
+		OperationalSystem os = OperationalSystem.create(hwd);
+		System.out.println(hwd.getController().getPhysicalAddress().getMaxAddress());
+		
+		for (long i = 0; i < hwd.getController().getPhysicalAddress().getMaxAddress(); i++)
+			testAddress(os, i);
+		
+	}
+	
+	@Test
+	void testAllAdressAndPosition2MemoryTest() throws Exception {
+		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2MemEccSingle.json");
+		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
+		OperationalSystem os = OperationalSystem.create(hwd);
+		System.out.println(hwd.getController().getPhysicalAddress().getMaxAddress());
+		
+		for (long i = 0; i < hwd.getController().getPhysicalAddress().getMaxAddress(); i++)
+			testAddress(os, i);
+		
+	}
+	
+
+	private static void testAddress(OperationalSystem os, long address) throws InterruptedException {
+		os.writeAndSync(Bits.from("P"), address);
+		assertEquals('P', (char) os.read(address).toInt());
+	}
+	
+	
 }
