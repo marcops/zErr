@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import lombok.Data;
 
 @Data
-public class ErrorInformation {
+public class ErrorTypeInformation {
 	private AtomicLong hardError = new AtomicLong();
 	private AtomicLong softError = new AtomicLong();
 	@Override

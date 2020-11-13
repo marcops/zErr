@@ -13,7 +13,6 @@ public class ModuleExecutor extends Thread {
 
 	@Override
 	public void run() {
-		System.out.println("in" + Thread.currentThread().getId()+ this.getClass().getName());
 		while (true) {
 			try {
 				ChannelEvent request = module.getChannelBuffer().getIn().take();

@@ -5,12 +5,12 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
-import zerr.simulator.report.ErrorInformation;
+import zerr.simulator.report.ErrorTypeInformation;
 
 @Getter
 public final class Report {
 	private static final Report INSTANCE = new Report();
-	private ConcurrentHashMap<Long, ErrorInformation> errorInformation = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<Long, ErrorTypeInformation> errorInformation = new ConcurrentHashMap<>();
 	private AtomicLong totalReadInstruction = new AtomicLong();
 	private AtomicLong totalWriteInstruction = new AtomicLong();
 	private long initTime = System.currentTimeMillis();
@@ -32,7 +32,7 @@ public final class Report {
 	
 	public synchronized void addError(long pAddress, boolean hard) {
 		if(!errorInformation.contains(pAddress))
-			errorInformation.put(pAddress, new ErrorInformation());	
+			errorInformation.put(pAddress, new ErrorTypeInformation());	
 		
 		if(hard) errorInformation.get(pAddress).getHardError().incrementAndGet();
 		else errorInformation.get(pAddress).getSoftError().incrementAndGet();

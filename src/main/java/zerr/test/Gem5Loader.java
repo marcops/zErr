@@ -52,6 +52,7 @@ public class Gem5Loader {
 	}
 
 	private void readLine(String x) throws InterruptedException {
+		final long PRINT_EVERY = 10000;
 		//7599750: system.mem_ctrl: zErr,RD,28328,0xc1,28000
 		String[] splZerr = x.split(",");
 		if(splZerr == null) return;
@@ -67,7 +68,7 @@ public class Gem5Loader {
 		if(read.charAt(0) == 'R') os.read(address);
 		else os.write(Bits.from(value), address);
 		
-		if(line%10000 == 0) log.info("process:" + ((line*100)/2539404) + "%");
+		if (line % PRINT_EVERY == 0) log.info("process:" + line);
 	}
 
 }

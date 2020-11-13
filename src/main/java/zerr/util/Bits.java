@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Bits extends BitSet {
+	public static final int WORD_LENGTH = 64;
 	public static final int ONE_BYTE = 8; 
 	private int length;
 
@@ -29,7 +30,7 @@ public class Bits extends BitSet {
 	}
 	
 	public static Bits from(final byte msg) {
-		return bitSet2Bits(BitSet.valueOf(new byte[] { msg }), 64);
+		return bitSet2Bits(BitSet.valueOf(new byte[] { msg }), WORD_LENGTH);
 	}
 	
 	public static Bits[] from(final byte[] msgs) {
@@ -83,7 +84,7 @@ public class Bits extends BitSet {
 	}
 
 	public static Bits from(long r) {
-		return bitSet2Bits(BitSet.valueOf(new long[] { r }), 64);
+		return bitSet2Bits(BitSet.valueOf(new long[] { r }), WORD_LENGTH);
 	}
 
 	public int[] toIntArray() {
