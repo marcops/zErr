@@ -1,38 +1,49 @@
 package zerr.simulator;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import zerr.configuration.model.FaultInjectionConfModel;
 import zerr.configuration.model.SimulatorConfModel;
 import zerr.simulator.faultinjection.IFaultMode;
+import zerr.simulator.faultinjection.IFaultType;
 import zerr.simulator.hardware.Hardware;
 
-@Builder
 @Data
 @Slf4j
 public class FaultInjection extends Thread {
-	private Long everyMilliseconds;
+	private Long every;
 	private Hardware hardware;
-	private IFaultMode mode;
+	private IFaultType type;
+	private IFaultMode mode ;
 	private boolean running;
-
+	private Integer distance;
+	private static FaultInjection INSTANCE = null;
+	private FaultInjection() {}
+	
+	public static FaultInjection getInstance() {
+		return INSTANCE;
+	}
+	
 	public static FaultInjection create(SimulatorConfModel simulator, Hardware hwd) {
 		FaultInjectionConfModel conf = simulator.getFaultinjection();
-		IFaultMode mode = conf.getMode().getMode();
-		return FaultInjection.builder()
-				.everyMilliseconds(conf.getEvery())
-				.running(mode != null)
-				.mode(mode)
-				.hardware(hwd)
-				.build();
+		IFaultType type = conf.getType().getType();
+		IFaultMode mode = conf.getMode().getType().getType();
+		
+		INSTANCE = new FaultInjection();
+		INSTANCE.setDistance(conf.getMode().getDistance());
+		INSTANCE.setEvery(conf.getEvery());
+		INSTANCE.setRunning(type != null);
+		INSTANCE.setType(type);
+		INSTANCE.setMode(mode);
+		INSTANCE.setHardware(hwd);
+		return INSTANCE;
 	}
 
 	@Override
 	public void run() {
 		while (running) {
 			try {
-				mode.exec(this);
+				running = type.exec(this);
 			} catch (Exception e) {
 				log.info("running faultInjection", e);
 				return;

@@ -2,7 +2,6 @@ package zerr.test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 
 import lombok.extern.slf4j.Slf4j;
 import zerr.simulator.os.OperationalSystem;
@@ -24,7 +23,7 @@ public class Gem5Loader {
 			public void run() {
 				try {
 					loadFile(filename);
-				} catch (IOException e) {
+				} catch (Exception e) {
 					log.error("fail on read file ",e);
 				}
 			}
@@ -33,7 +32,7 @@ public class Gem5Loader {
 		thread.join();
 	}
 
-	private void loadFile(String filename) throws IOException {
+	private void loadFile(String filename) throws Exception {
 		try(BufferedReader br = new BufferedReader(new FileReader(
 				getClass()
 				.getClassLoader()
@@ -45,7 +44,7 @@ public class Gem5Loader {
 		}
 	}
 
-	private void readLine(String x) {
+	private void readLine(String x) throws Exception {
 		final long PRINT_EVERY = 10000;
 		//7599750: system.mem_ctrl: zErr,RD,28328,0xc1,28000
 		String[] splZerr = x.split(",");

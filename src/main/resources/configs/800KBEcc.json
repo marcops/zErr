@@ -2,13 +2,21 @@
   "simulator" : {
    "full": true,
     "faultinjection" : {
-      "mode" : "RANDOM_TIME",
-      "every" : 1
+      "type" : "INSTRUCTION",
+      "every" : 100,
+      "mode" : { 
+      	"type": "AROUND",
+      	"distance": 2
+      }
     }
   },
   "hardware" : {
     "controller" : {
-      "eccType" : "HAMMING_SECDEC",
+      "ecc" : { 
+      	"type": [ "CRC8", "HAMMING_SECDEC"],
+      	"mode": "NUMBER_OF_FAILS",
+      	"after" : 5
+      },
       "module" : {
         "amount" : 1,
         "name" : "oldestDDR",

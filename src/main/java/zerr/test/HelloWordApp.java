@@ -12,7 +12,7 @@ public class HelloWordApp {
 		this.os = os;
 	}
 
-	public void exec() throws InterruptedException {
+	public void exec() throws Exception {
 		final int SLEEP_TIME = 100;
 
 		for (int c = 0; c < 10; c++) {

@@ -1,17 +1,17 @@
 package zerr.simulator.faultinjection;
 
 public enum FaultMode {
-	RANDOM_TIME(new RandomTimeFaultMode()),
-	FIXED_TIME(null);
+	RANDOM(new RandomFaultMode()),
+	AROUND(new AroundFaultMode());
 	
-	private final IFaultMode mode;
+	private final IFaultMode type;
 
-	FaultMode(final IFaultMode mode) {
-        this.mode = mode;
+	FaultMode(final IFaultMode type) {
+        this.type = type;
     }
 	
-	public IFaultMode getMode() {
-		return mode;
+	public IFaultMode getType() {
+		return type;
 	}
 
 }

@@ -66,8 +66,8 @@ public final class Report {
 //		  .map(entry -> "\tpAddress[" + entry.getKey() + "] " + entry.getValue())
 //          .collect(Collectors.joining("\r\n"));
 //		ret += memory.getPrintFault();
-		ret += "\r\n\r\nTotal Read Instruction: " + totalReadInstruction;
-		ret += "\r\nTotal Write Instruction: " + totalWriteInstruction;
+		ret += "\r\n\r\nTotal Read Instruction: " + totalReadInstruction.get();
+		ret += "\r\nTotal Write Instruction: " + totalWriteInstruction.get();
 		
 		ret += "\r\nExecution Time: " + (System.currentTimeMillis()-initTime + "ms");
 		

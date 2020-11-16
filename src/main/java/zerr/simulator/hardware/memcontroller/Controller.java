@@ -9,6 +9,7 @@ import zerr.configuration.ConfigurationService;
 import zerr.configuration.model.ControllerConfModel;
 import zerr.exception.HardErrorException;
 import zerr.exception.SoftErrorException;
+import zerr.simulator.FaultInjection;
 import zerr.simulator.Report;
 import zerr.simulator.hardware.memory.Cell;
 import zerr.simulator.hardware.memory.ChannelEvent;
@@ -21,7 +22,6 @@ import zerr.util.Bits;
 @Slf4j
 public final class Controller {
 	private HashMap<Integer, Module> hashModule;
-	private EccType eccType;
 	private ChannelMode channelMode;
 	private PhysicalAddressService physicalAddress;
 	private ControllerECC controllerEcc;
@@ -47,15 +47,15 @@ public final class Controller {
 		PhysicalAddressService phy = PhysicalAddressService.create(hash.get(0), controller.getChannelMode());
 		return Controller.builder()
 				.hashModule(hash)
-				.eccType(controller.getEccType())
 				.channelMode(controller.getChannelMode())
 				.physicalAddress(phy)
-				.controllerEcc(ControllerECC.builder().eccType(controller.getEccType()).build())
+				.controllerEcc(ControllerECC.create(controller.getEcc()))
 				.build();
 	}
 
-	public void write(Bits msg, long pAddress) {
+	public void write(Bits msg, long pAddress) throws Exception {
 		Report.getInstance().addWriteInstruction();
+		FaultInjection.getInstance().getType().exec(FaultInjection.getInstance());
 		PhysicalAddress va = physicalAddress.getPhysicalAddress(pAddress);
 		log.debug("W-" + va.toString()+ ", data=" + msg.toLong());
 		//TODO MELHORAR
@@ -65,8 +65,9 @@ public final class Controller {
 			Report.getInstance().getMemory().write(physicalAddress.getPhysicalAddress(pAddress) , controllerEcc.encode(msg));
 	}
 
-	public Bits read(long pAddress) {
+	public Bits read(long pAddress) throws Exception {
 		Report.getInstance().addReadInstruction();
+		FaultInjection.getInstance().getType().exec(FaultInjection.getInstance());
 		PhysicalAddress va = physicalAddress.getPhysicalAddress(pAddress);
 		//TODO MELHORAR
 		
@@ -85,17 +86,10 @@ public final class Controller {
 		}
 	}
 
-	private Bits doRead(PhysicalAddress va) {
-		try {
-			if(ConfigurationService.getInstance().getZErrConfModel().getSimulator().getFull())
-				return this.readEvent(va);
-			return Report.getInstance().getMemory().read(va);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	
-		return new Bits();
+	private Bits doRead(PhysicalAddress va) throws InterruptedException {
+		if(ConfigurationService.getInstance().getZErrConfModel().getSimulator().getFull())
+			return this.readEvent(va);
+		return Report.getInstance().getMemory().read(va);
 	}
 
 

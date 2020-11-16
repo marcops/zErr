@@ -17,22 +17,22 @@ public class OperationalSystem {
 				.build();
 	}
 
-	public void write(Bits[] msg, long pAddress) {
+	public void write(Bits[] msg, long pAddress) throws Exception {
 		for (int i = 0; i < msg.length; i++) write(msg[i], pAddress + i);
 	}
 	//TEST PROPOSE ONLY
-	public void writeAndSync(Bits[] msg, long pAddress) throws InterruptedException {
+	public void writeAndSync(Bits[] msg, long pAddress) throws Exception {
 		write(msg, pAddress);
 		hardware.getController().waitSync();
 	}
 	//TEST PROPOSE ONLY
-	public void writeAndSync(Bits msg, long pAddress) throws InterruptedException {
+	public void writeAndSync(Bits msg, long pAddress) throws Exception {
 		write(msg, pAddress);
 		hardware.getController().waitSync();
 	}
 
 
-	public void write(Bits bits, long pAddress) {
+	public void write(Bits bits, long pAddress) throws Exception {
 		hardware.getController().write(bits, pAddress);
 	}
 
@@ -40,7 +40,7 @@ public class OperationalSystem {
 		hardware.getController().invertBit(pAddress, bitPosition);
 	}
 
-	public Bits read(long pAddress) {
+	public Bits read(long pAddress) throws Exception {
 		return hardware.getController().read(pAddress);
 	}
 

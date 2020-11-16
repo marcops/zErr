@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import zerr.simulator.hardware.memcontroller.ChannelMode;
-import zerr.simulator.hardware.memcontroller.EccType;
 
 @Data
 @Builder
@@ -16,6 +15,6 @@ import zerr.simulator.hardware.memcontroller.EccType;
 @NoArgsConstructor
 public class ControllerConfModel {
 	private ModuleConfModel module;
-	private EccType eccType;
+	private EccConfModel ecc;
 	private ChannelMode channelMode;
 }
