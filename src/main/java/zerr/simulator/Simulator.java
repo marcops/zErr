@@ -18,7 +18,7 @@ public final class Simulator {
 	
 	//"2mod4bytesECC.json"
 	public static Simulator create(String configFile) throws Exception {
-		ZErrConfModel zerr = new ConfigurationService().load(configFile);
+		ZErrConfModel zerr = ConfigurationService.getInstance().load(configFile);
 		log.info("Config loaded = " + zerr.toString());
 		
 		Hardware hwd = Hardware.create(zerr.getHardware());
@@ -35,7 +35,7 @@ public final class Simulator {
 		faultInjection.start();
 		try {
 			Gem5Loader gl = new Gem5Loader(operationalSystem);
-			gl.exec("gem5/aPlusOne.txt");
+			gl.exec("gem5/aFast2.txt");
 //			HelloWordApp hl = new HelloWordApp(operationalSystem);
 //			hl.exec();
 		} finally {
@@ -43,7 +43,9 @@ public final class Simulator {
 			faultInjection.shutdown();
 		}
 		
-		log.info(Report.getInstance().getReport());
+		Report.getInstance().getReport();
+		Report.getInstance().calculateByGlobal();
+//		log.info(Report.getInstance().getReport());
 	}
 
 }

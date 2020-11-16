@@ -6,9 +6,19 @@ import java.nio.file.Paths;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.Data;
 import zerr.configuration.model.ZErrConfModel;
 
+@Data
 public class ConfigurationService {
+	
+	private static final ConfigurationService INSTANCE = new ConfigurationService();
+	private ZErrConfModel zErrConfModel;
+	
+	private ConfigurationService() {}
+	public static ConfigurationService getInstance() {
+		return INSTANCE;
+	}
 	
 	public ZErrConfModel load(String configuration) throws Exception {
 		byte[] jsonData = Files.readAllBytes(
@@ -18,6 +28,7 @@ public class ConfigurationService {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
-		return objectMapper.readValue(jsonData, ZErrConfModel.class);
+		zErrConfModel = objectMapper.readValue(jsonData, ZErrConfModel.class);
+		return zErrConfModel;
 	}
 }

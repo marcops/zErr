@@ -40,7 +40,7 @@ public class OperationalSystem {
 		hardware.getController().invertBit(pAddress, bitPosition);
 	}
 
-	public Bits read(long pAddress) throws InterruptedException {
+	public Bits read(long pAddress) {
 		return hardware.getController().read(pAddress);
 	}
 

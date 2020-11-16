@@ -1,10 +1,8 @@
 package zerr.test;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.stream.Stream;
 
 import lombok.extern.slf4j.Slf4j;
 import zerr.simulator.os.OperationalSystem;
@@ -26,7 +24,7 @@ public class Gem5Loader {
 			public void run() {
 				try {
 					loadFile(filename);
-				} catch (IOException | URISyntaxException e) {
+				} catch (IOException e) {
 					log.error("fail on read file ",e);
 				}
 			}
@@ -35,23 +33,19 @@ public class Gem5Loader {
 		thread.join();
 	}
 
-	private void loadFile(String filename) throws IOException, URISyntaxException {
-		try (Stream<String> stream = Files.lines(Path.of(
+	private void loadFile(String filename) throws IOException {
+		try(BufferedReader br = new BufferedReader(new FileReader(
 				getClass()
 				.getClassLoader()
-				.getResource(filename).toURI()))) {
-			line=0;
-			stream.forEach(x->{
-				try {
-					readLine(x);
-				} catch (Exception  e) {
-					log.error("fail on read file ",e);
-				}
-			});
+				.getResource(filename).getPath()))){
+			String r;
+			while ((r = br.readLine()) != null) {
+				readLine(r);
+			}  
 		}
 	}
 
-	private void readLine(String x) throws InterruptedException {
+	private void readLine(String x) {
 		final long PRINT_EVERY = 10000;
 		//7599750: system.mem_ctrl: zErr,RD,28328,0xc1,28000
 		String[] splZerr = x.split(",");

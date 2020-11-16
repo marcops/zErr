@@ -14,5 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SimulatorConfModel {
 	private FaultInjectionConfModel faultinjection;
+	private Boolean full;
 
 }

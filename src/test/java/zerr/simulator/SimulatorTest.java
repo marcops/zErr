@@ -15,7 +15,7 @@ class SimulatorTest {
 
 	@Test
 	void oneWordTest() throws Exception {
-		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesCRC8.json");
+		ZErrConfModel zErrConfiguration = ConfigurationService.getInstance().load("2mod4bytesCRC8.json");
 		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
 		OperationalSystem os = OperationalSystem.create(hwd);
 
@@ -28,7 +28,7 @@ class SimulatorTest {
 
 	@Test
 	void longMaxTest() throws Exception {
-		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesCRC8.json");
+		ZErrConfModel zErrConfiguration = ConfigurationService.getInstance().load("2mod4bytesCRC8.json");
 		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
 		OperationalSystem os = OperationalSystem.create(hwd);
 
@@ -39,7 +39,7 @@ class SimulatorTest {
 
 	@Test
 	void longMaxInvertLastPositionTest() throws Exception {
-		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesCRC8.json");
+		ZErrConfModel zErrConfiguration = ConfigurationService.getInstance().load("2mod4bytesCRC8.json");
 		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
 		OperationalSystem os = OperationalSystem.create(hwd);
 
@@ -51,7 +51,7 @@ class SimulatorTest {
 
 	@Test
 	void longNegativeTest() throws Exception {
-		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesCRC8.json");
+		ZErrConfModel zErrConfiguration = ConfigurationService.getInstance().load("2mod4bytesCRC8.json");
 		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
 		OperationalSystem os = OperationalSystem.create(hwd);
 
@@ -62,7 +62,7 @@ class SimulatorTest {
 
 	@Test
 	void oneWordInvertedCRC8Test() throws Exception {
-		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesCRC8.json");
+		ZErrConfModel zErrConfiguration = ConfigurationService.getInstance().load("2mod4bytesCRC8.json");
 		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
 		OperationalSystem os = OperationalSystem.create(hwd);
 
@@ -79,7 +79,7 @@ class SimulatorTest {
 
 	@Test
 	void oneWordInvertedHammingTest() throws Exception {
-		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesECC.json");
+		ZErrConfModel zErrConfiguration = ConfigurationService.getInstance().load("2mod4bytesECC.json");
 		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
 		OperationalSystem os = OperationalSystem.create(hwd);
 
@@ -93,7 +93,7 @@ class SimulatorTest {
 
 	@Test
 	void oneWord2InvertedHammingTest() throws Exception {
-		ZErrConfModel zErrConfiguration = new ConfigurationService().load("2mod4bytesECC.json");
+		ZErrConfModel zErrConfiguration = ConfigurationService.getInstance().load("2mod4bytesECC.json");
 		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
 		OperationalSystem os = OperationalSystem.create(hwd);
 
@@ -109,7 +109,7 @@ class SimulatorTest {
 
 	@Test
 	void largeLoadMemoryTest() throws Exception {
-		ZErrConfModel zErrConfiguration = new ConfigurationService().load("64MBEcc.json");
+		ZErrConfModel zErrConfiguration = ConfigurationService.getInstance().load("64MBEcc.json");
 		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
 		OperationalSystem os = OperationalSystem.create(hwd);
 
@@ -133,7 +133,7 @@ class SimulatorTest {
 	}
 
 	private static void testFullAddress(String file) throws Exception, InterruptedException {
-		ZErrConfModel zErrConfiguration = new ConfigurationService().load(file);
+		ZErrConfModel zErrConfiguration = ConfigurationService.getInstance().load(file);
 		Hardware hwd = Hardware.create(zErrConfiguration.getHardware());
 		OperationalSystem os = OperationalSystem.create(hwd);
 		System.out.println(hwd.getController().getPhysicalAddress().getMaxAddress());

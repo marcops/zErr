@@ -7,7 +7,7 @@ import zerr.simulator.hardware.Hardware;
 public class Util {
 
 	public static Hardware loadConfig(String file) throws Exception {
-		ZErrConfModel zErrConfiguration = new ConfigurationService().load(file);
+		ZErrConfModel zErrConfiguration = ConfigurationService.getInstance().load(file);
 		return Hardware.create(zErrConfiguration.getHardware());
 	}
 }

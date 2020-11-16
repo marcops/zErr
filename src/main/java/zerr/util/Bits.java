@@ -19,9 +19,9 @@ public class Bits extends BitSet {
 		length = size;
 	}
 	
-	public void invert(int pos) {
+	public void invert(long pos) {
 		if(pos < 0 || pos > length) log.error("bit invert fail " + pos);
-		this.set(pos,!this.get(pos));
+		this.set((int)pos,!this.get((int)pos));
 	}
 	
 	@Override
@@ -31,6 +31,13 @@ public class Bits extends BitSet {
 	
 	public static Bits from(final byte msg) {
 		return bitSet2Bits(BitSet.valueOf(new byte[] { msg }), WORD_LENGTH);
+	}
+	
+	public static Bits fromArray(final byte[] msgs) {
+		Bits b = new Bits();
+		for(int i = 0; i< msgs.length;i++) 
+			b.append(from(msgs[i]));
+		return b;
 	}
 	
 	public static Bits[] from(final byte[] msgs) {

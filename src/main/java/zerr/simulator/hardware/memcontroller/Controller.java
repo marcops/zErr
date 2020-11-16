@@ -4,7 +4,11 @@ import java.util.HashMap;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import zerr.configuration.ConfigurationService;
 import zerr.configuration.model.ControllerConfModel;
+import zerr.exception.HardErrorException;
+import zerr.exception.SoftErrorException;
 import zerr.simulator.Report;
 import zerr.simulator.hardware.memory.Cell;
 import zerr.simulator.hardware.memory.ChannelEvent;
@@ -14,7 +18,7 @@ import zerr.util.Bits;
 
 @Builder
 @Data
-//@Slf4j
+@Slf4j
 public final class Controller {
 	private HashMap<Integer, Module> hashModule;
 	private EccType eccType;
@@ -40,48 +44,78 @@ public final class Controller {
 		for (int i = 0; i < controller.getModule().getAmount(); i++)
 			hash.put(i, Module.create(controller.getModule()));
 		
-		Controller c = Controller.builder()
+		PhysicalAddressService phy = PhysicalAddressService.create(hash.get(0), controller.getChannelMode());
+		return Controller.builder()
 				.hashModule(hash)
 				.eccType(controller.getEccType())
 				.channelMode(controller.getChannelMode())
+				.physicalAddress(phy)
 				.controllerEcc(ControllerECC.builder().eccType(controller.getEccType()).build())
 				.build();
-		c.setPhysicalAddress(PhysicalAddressService.create(c));
-		return c;
 	}
 
 	public void write(Bits msg, long pAddress) {
 		Report.getInstance().addWriteInstruction();
 		PhysicalAddress va = physicalAddress.getPhysicalAddress(pAddress);
-//		log.info("W-" + va.toString()+ ", data=" + msg.toLong());
-		this.writeEvent(va, controllerEcc.encode(msg));
+		log.debug("W-" + va.toString()+ ", data=" + msg.toLong());
+		//TODO MELHORAR
+		if(ConfigurationService.getInstance().getZErrConfModel().getSimulator().getFull())
+			this.writeEvent(va, controllerEcc.encode(msg));
+		else
+			Report.getInstance().getMemory().write(physicalAddress.getPhysicalAddress(pAddress) , controllerEcc.encode(msg));
 	}
 
-	public Bits read(long pAddress) throws InterruptedException {
+	public Bits read(long pAddress) {
 		Report.getInstance().addReadInstruction();
 		PhysicalAddress va = physicalAddress.getPhysicalAddress(pAddress);
-		Bits msg = this.readEvent(va);
-//		log.info("R-" + va.toString() + ", data=" + msg.toLong());
-		return controllerEcc.decode(pAddress, msg);
+		//TODO MELHORAR
+		
+		Bits msg = doRead(va);
+		log.debug("R-" + va.toString() + ", data=" + msg.toLong());
+		try {
+			return controllerEcc.decode(msg);
+		} catch (HardErrorException e) {
+			Report.getInstance().hardError(va);
+			log.debug("HardError", e);
+			return new Bits();
+		} catch (SoftErrorException e) {
+			Report.getInstance().softError(va);
+			log.debug("SoftError", e);
+			return e.getRecovered();
+		}
+	}
+
+	private Bits doRead(PhysicalAddress va) {
+		try {
+			if(ConfigurationService.getInstance().getZErrConfModel().getSimulator().getFull())
+				return this.readEvent(va);
+			return Report.getInstance().getMemory().read(va);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	
+		return new Bits();
 	}
 
 
 	public void invertBit(long pAddress, int bitPosition) {
-		if(bitPosition<0 || bitPosition >= 64) {
+		if(bitPosition<0 || bitPosition >= Bits.WORD_LENGTH) {
 			throw new IllegalArgumentException("bitPosition between 0 and 64");
 		}
 		
 		PhysicalAddress va = physicalAddress.getPhysicalAddress(pAddress);
-		int chipPos = bitPosition/8;
+//		Report.getInstance().getMemory().invertBit(va, bitPosition);
+		int chipPos = bitPosition/Bits.ONE_BYTE;
 		Cell cell = this
-			.getHashModule().get(va.getModule().toInt())
-			.getHashRank().get(va.getRank().toInt())
+			.getHashModule().get((int)va.getModule())
+			.getHashRank().get((int)va.getRank())
 			.getHashChip().get(chipPos)
-			.getHashBankGroup().get(va.getBankGroup().toInt())
-			.getHashBank().get(va.getBank().toInt())
-			.getHashCell().get(bitPosition-(chipPos*8));
+			.getHashBankGroup().get((int)va.getBankGroup())
+			.getHashBank().get((int)va.getBank())
+			.getHashCell().get(bitPosition-(chipPos*Bits.ONE_BYTE));
 		
-//		log.info("I-" + va + " bitPosition="+bitPosition );
+		log.debug("I-" + va + " bitPosition="+bitPosition );
 		cell.getIcell().invert(va.getCellPosition());
 	}
 
@@ -95,30 +129,30 @@ public final class Controller {
 
 	public void writeEvent(PhysicalAddress pAddress, final Bits data) {
 		this.sendCommand(ChannelEvent.builder()
-				.address(pAddress.getRow())
-				.bank(pAddress.getBank())
-				.bankGroup(pAddress.getBankGroup())
-				.rank(pAddress.getRank())
-				.module(pAddress.getModule())
+				.address(Bits.from(pAddress.getRow()))
+				.bank(Bits.from(pAddress.getBank()))
+				.bankGroup(Bits.from(pAddress.getBankGroup()))
+				.rank(Bits.from(pAddress.getRank()))
+				.module(Bits.from(pAddress.getModule()))
 				.data(data)
 				.controlSignal(ControlSignal.loadRow())
 				.build());
 		
 		this.sendCommand(ChannelEvent.builder()
-				.address(pAddress.getColumn())
-				.bank(pAddress.getBank())
-				.bankGroup(pAddress.getBankGroup())
-				.rank(pAddress.getRank())
-				.module(pAddress.getModule())
+				.address(Bits.from(pAddress.getColumn()))
+				.bank(Bits.from(pAddress.getBank()))
+				.bankGroup(Bits.from(pAddress.getBankGroup()))
+				.rank(Bits.from(pAddress.getRank()))
+				.module(Bits.from(pAddress.getModule()))
 				.data(data)
 				.controlSignal(ControlSignal.setSenseAmpColumn())
 				.build());
 		
 		this.sendCommand(ChannelEvent.builder()
-				.bank(pAddress.getBank())
-				.bankGroup(pAddress.getBankGroup())
-				.rank(pAddress.getRank())
-				.module(pAddress.getModule())
+				.bank(Bits.from(pAddress.getBank()))
+				.bankGroup(Bits.from(pAddress.getBankGroup()))
+				.rank(Bits.from(pAddress.getRank()))
+				.module(Bits.from(pAddress.getModule()))
 				.data(data)
 				.controlSignal(ControlSignal.writeCell())
 				.build());
@@ -130,30 +164,30 @@ public final class Controller {
 
 	public Bits readEvent(PhysicalAddress pAddress) throws InterruptedException {
 			this.sendCommand(ChannelEvent.builder()
-					.address(pAddress.getRow())
-					.bank(pAddress.getBank())
-					.bankGroup(pAddress.getBankGroup())
-					.rank(pAddress.getRank())
-					.module(pAddress.getModule())
+					.address(Bits.from(pAddress.getRow()))
+					.bank(Bits.from(pAddress.getBank()))
+					.bankGroup(Bits.from(pAddress.getBankGroup()))
+					.rank(Bits.from(pAddress.getRank()))
+					.module(Bits.from(pAddress.getModule()))
 					.data(new Bits())
 					.controlSignal(ControlSignal.loadRow())
 					.build());
 			
 			this.sendCommand(ChannelEvent.builder()
-					.address(pAddress.getColumn())
-					.bank(pAddress.getBank())
-					.bankGroup(pAddress.getBankGroup())
-					.rank(pAddress.getRank())
-					.module(pAddress.getModule())
+					.address(Bits.from(pAddress.getColumn()))
+					.bank(Bits.from(pAddress.getBank()))
+					.bankGroup(Bits.from(pAddress.getBankGroup()))
+					.rank(Bits.from(pAddress.getRank()))
+					.module(Bits.from(pAddress.getModule()))
 					.data(new Bits())
 					.controlSignal(ControlSignal.loadColumn())
 					.build());
 			
 			return this.sendCommandAndWait(ChannelEvent.builder()
-					.bank(pAddress.getBank())
-					.bankGroup(pAddress.getBankGroup())
-					.rank(pAddress.getRank())
-					.module(pAddress.getModule())
+					.bank(Bits.from(pAddress.getBank()))
+					.bankGroup(Bits.from(pAddress.getBankGroup()))
+					.rank(Bits.from(pAddress.getRank()))
+					.module(Bits.from(pAddress.getModule()))
 					.data(new Bits())
 					.controlSignal(ControlSignal.dataOkToRead())
 					.build()).getData();

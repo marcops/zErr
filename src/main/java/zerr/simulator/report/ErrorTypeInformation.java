@@ -8,6 +8,7 @@ import lombok.Data;
 public class ErrorTypeInformation {
 	private AtomicLong hardError = new AtomicLong();
 	private AtomicLong softError = new AtomicLong();
+	
 	@Override
 	public String toString() {
 		String ret = "";

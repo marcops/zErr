@@ -1,8 +1,9 @@
 {
   "simulator" : {
+   "full": true,
     "faultinjection" : {
       "mode" : "RANDOM_TIME",
-      "every" : 100
+      "every" : 1
     }
   },
   "hardware" : {

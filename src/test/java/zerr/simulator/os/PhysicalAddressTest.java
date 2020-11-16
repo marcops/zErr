@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import zerr.simulator.Util;
+import zerr.simulator.hardware.memcontroller.Controller;
 import zerr.simulator.hardware.memcontroller.PhysicalAddressService;
 
 @SuppressWarnings("static-method")
@@ -16,7 +17,8 @@ class PhysicalAddressTest {
 
 	@Test
 	void validate4Bytes() throws Exception {
-		PhysicalAddressService pAddress = PhysicalAddressService.create(Util.loadConfig("4bytes.json").getController());
+		Controller cont = Util.loadConfig("4bytes.json").getController();
+		PhysicalAddressService pAddress = PhysicalAddressService.create(cont.getHashModule().get(0), cont.getChannelMode());
 
 		long address = 0;
 		assertEquals(0L, pAddress.getModule(address));
@@ -54,7 +56,8 @@ class PhysicalAddressTest {
 
 	@Test
 	void exceed4Bytes() throws Exception {
-		PhysicalAddressService pAddress = PhysicalAddressService.create(Util.loadConfig("4bytes.json").getController());
+		Controller cont = Util.loadConfig("4bytes.json").getController();
+		PhysicalAddressService pAddress = PhysicalAddressService.create(cont.getHashModule().get(0), cont.getChannelMode());
 
 		long address = 4;
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -64,7 +67,8 @@ class PhysicalAddressTest {
 
 	@Test
 	void testBank() throws Exception {
-		PhysicalAddressService pAddress = PhysicalAddressService.create(Util.loadConfig("4bytes2bank.json").getController());
+		Controller cont = Util.loadConfig("4bytes2bank.json").getController();
+		PhysicalAddressService pAddress = PhysicalAddressService.create(cont.getHashModule().get(0), cont.getChannelMode());
 
 		long address = 4;
 		assertEquals(0L, pAddress.getModule(address));
@@ -77,7 +81,8 @@ class PhysicalAddressTest {
 
 	@Test
 	void testGroupBank() throws Exception {
-		PhysicalAddressService pAddress = PhysicalAddressService.create(Util.loadConfig("4bytes2Groupbank.json").getController());
+		Controller cont = Util.loadConfig("4bytes2Groupbank.json").getController();
+		PhysicalAddressService pAddress = PhysicalAddressService.create(cont.getHashModule().get(0), cont.getChannelMode());
 
 		long address = 4;
 		assertEquals(0L, pAddress.getModule(address));
@@ -90,7 +95,8 @@ class PhysicalAddressTest {
 
 	@Test
 	void testRank() throws Exception {
-		PhysicalAddressService pAddress = PhysicalAddressService.create(Util.loadConfig("4bytes2Rank.json").getController());
+		Controller cont = Util.loadConfig("4bytes2Rank.json").getController();
+		PhysicalAddressService pAddress = PhysicalAddressService.create(cont.getHashModule().get(0), cont.getChannelMode());
 
 		long address = 4;
 		assertEquals(0L, pAddress.getModule(address));

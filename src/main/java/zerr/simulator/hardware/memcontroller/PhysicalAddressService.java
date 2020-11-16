@@ -30,8 +30,7 @@ public class PhysicalAddressService {
 		return PhysicalAddress.create(this, pAddress);
 	}
 	
-	public static PhysicalAddressService create(Controller controller) {
-		Module mod = controller.getHashModule().get(0);
+	public static PhysicalAddressService create(Module mod, ChannelMode channelMode) {
 		int rank = mod.getHashRank().size();
 		Rank r = mod.getHashRank().get(0);
 
@@ -59,7 +58,7 @@ public class PhysicalAddressService {
 				.bankGroupSize(bankGroupSize)
 				.rankSize(rankSize)
 				.maxAddress(maxAddress)
-				.mode(controller.getChannelMode() == null ? ChannelMode.SINGLE : controller.getChannelMode())
+				.mode(channelMode == null ? ChannelMode.SINGLE : channelMode)
 				.build();
 	}
 
